@@ -2300,6 +2300,10 @@
   # @Prompt Conduit to use in ArmFfaLib.
   gEfiMdeModulePkgTokenSpaceGuid.PcdFfaLibConduitSmc|TRUE|BOOLEAN|0x10000029
 
+  ## Controls whether TerminalDxe outputs an XTerm resize sequence on terminal
+  #  mode change.
+  gEfiMdeModulePkgTokenSpaceGuid.PcdResizeXterm|FALSE|BOOLEAN|0x00010080
+
 [PcdsPatchableInModule]
   ## Specify memory size with page number for PEI code when
   #  Loading Module at Fixed Address feature is enabled.
