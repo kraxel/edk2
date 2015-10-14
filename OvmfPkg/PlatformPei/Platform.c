@@ -43,6 +43,18 @@
 #include "Platform.h"
 #include "PlatformId.h"
 
+#define UPDATE_BOOLEAN_PCD_FROM_FW_CFG(TokenName)                   \
+          do {                                                      \
+            BOOLEAN       Setting;                                  \
+            RETURN_STATUS PcdStatus;                                \
+                                                                    \
+            if (!RETURN_ERROR (QemuFwCfgParseBool (                 \
+                              "opt/ovmf/" #TokenName, &Setting))) { \
+              PcdStatus = PcdSetBoolS (TokenName, Setting);         \
+              ASSERT_RETURN_ERROR (PcdStatus);                      \
+            }                                                       \
+          } while (0)
+
 EFI_PEI_PPI_DESCRIPTOR  mPpiBootMode[] = {
   {
     EFI_PEI_PPI_DESCRIPTOR_PPI | EFI_PEI_PPI_DESCRIPTOR_TERMINATE_LIST,
@@ -365,6 +377,7 @@ InitializePlatform (
     MemTypeInfoInitialization (PlatformInfoHob);
     MemMapInitialization (PlatformInfoHob);
     NoexecDxeInitialization (PlatformInfoHob);
+    UPDATE_BOOLEAN_PCD_FROM_FW_CFG (PcdResizeXterm);
   }
 
   InstallClearCacheCallback ();
