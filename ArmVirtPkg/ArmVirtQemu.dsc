@@ -579,7 +579,10 @@
   #
   # Video support
   #
-  OvmfPkg/QemuRamfbDxe/QemuRamfbDxe.inf
+  OvmfPkg/QemuRamfbDxe/QemuRamfbDxe.inf {
+    <PcdsFixedAtBuild>
+      gEfiMdePkgTokenSpaceGuid.PcdDebugPrintErrorLevel|($(DEBUG_PRINT_ERROR_LEVEL)) & 0xFFBFFFFF
+  }
   OvmfPkg/VirtioGpuDxe/VirtioGpu.inf
   OvmfPkg/PlatformDxe/Platform.inf
 
