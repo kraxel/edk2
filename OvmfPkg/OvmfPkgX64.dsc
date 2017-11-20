@@ -936,9 +936,15 @@
   MdeModulePkg/Universal/MemoryTest/NullMemoryTestDxe/NullMemoryTestDxe.inf
 
 !ifndef $(CSM_ENABLE)
-  OvmfPkg/QemuVideoDxe/QemuVideoDxe.inf
+  OvmfPkg/QemuVideoDxe/QemuVideoDxe.inf {
+    <PcdsFixedAtBuild>
+      gEfiMdePkgTokenSpaceGuid.PcdDebugPrintErrorLevel|0x8000004F
+  }
 !endif
-  OvmfPkg/QemuRamfbDxe/QemuRamfbDxe.inf
+  OvmfPkg/QemuRamfbDxe/QemuRamfbDxe.inf {
+    <PcdsFixedAtBuild>
+      gEfiMdePkgTokenSpaceGuid.PcdDebugPrintErrorLevel|0x8000004F
+  }
   OvmfPkg/VirtioGpuDxe/VirtioGpu.inf
 
   #
