@@ -993,8 +993,14 @@
   MdeModulePkg/Universal/DisplayEngineDxe/DisplayEngineDxe.inf
   MdeModulePkg/Universal/Acpi/S3SaveStateDxe/S3SaveStateDxe.inf
 
-  OvmfPkg/QemuVideoDxe/QemuVideoDxe.inf
-  OvmfPkg/QemuRamfbDxe/QemuRamfbDxe.inf
+  OvmfPkg/QemuVideoDxe/QemuVideoDxe.inf {
+    <PcdsFixedAtBuild>
+      gEfiMdePkgTokenSpaceGuid.PcdDebugPrintErrorLevel|0x8000004F
+  }
+  OvmfPkg/QemuRamfbDxe/QemuRamfbDxe.inf {
+    <PcdsFixedAtBuild>
+      gEfiMdePkgTokenSpaceGuid.PcdDebugPrintErrorLevel|0x8000004F
+  }
   OvmfPkg/VirtioGpuDxe/VirtioGpu.inf
   OvmfPkg/VirtHstiDxe/VirtHstiDxe.inf
 
