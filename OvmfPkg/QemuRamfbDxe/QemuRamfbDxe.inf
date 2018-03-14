@@ -1,0 +1,34 @@
+[Defines]
+  INF_VERSION                    = 0x00010005
+  BASE_NAME                      = QemuRamfbDxe
+  FILE_GUID                      = dce1b094-7dc6-45d0-9fdd-d7fc3cc3e4ef
+  MODULE_TYPE                    = DXE_DRIVER
+  VERSION_STRING                 = 1.0
+
+  ENTRY_POINT                    = InitializeQemuRamfb
+
+[Sources.common]
+  QemuRamfb.c
+
+[Packages]
+  MdePkg/MdePkg.dec
+  MdeModulePkg/MdeModulePkg.dec
+  OvmfPkg/OvmfPkg.dec
+
+[LibraryClasses]
+  BaseMemoryLib
+  DebugLib
+  DevicePathLib
+  FrameBufferBltLib
+  MemoryAllocationLib
+  UefiBootManagerLib
+  UefiBootServicesTableLib
+  UefiDriverEntryPoint
+  UefiLib
+  QemuFwCfgLib
+
+[Protocols]
+  gEfiGraphicsOutputProtocolGuid                # PROTOCOL BY_START
+
+[Depex]
+  TRUE
