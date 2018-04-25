@@ -746,6 +746,7 @@
 
   OvmfPkg/QemuVideoDxe/QemuVideoDxe.inf
   OvmfPkg/QemuRamfbDxe/QemuRamfbDxe.inf
+  OvmfPkg/QemuIGDHelperDxe/QemuIGDHelperDxe.inf
   OvmfPkg/VirtioGpuDxe/VirtioGpu.inf
 
   #
