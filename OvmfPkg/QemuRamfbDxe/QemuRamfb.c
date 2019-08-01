@@ -13,6 +13,7 @@
 #include <Library/BaseLib.h>
 #include <Library/BaseMemoryLib.h>
 #include <Library/DebugLib.h>
+#include <Library/DebugPrintErrorLevelLib.h>
 #include <Library/DevicePathLib.h>
 #include <Library/FrameBufferBltLib.h>
 #include <Library/MemoryAllocationLib.h>
@@ -259,6 +260,20 @@ InitializeQemuRamfb (
 
   Status = QemuFwCfgFindFile ("etc/ramfb", &mRamfbFwCfgItem, &FwCfgSize);
   if (EFI_ERROR (Status)) {
+ #if defined (MDE_CPU_AARCH64)
+    //
+    // RHBZ#1714446
+    // If no ramfb device was configured, this platform DXE driver should
+    // returns EFI_NOT_FOUND, so the DXE Core can unload it. However, even
+    // using a silent build, an error message is issued to the guest console.
+    // Since this confuse users, return success and stay resident. The wasted
+    // guest RAM still gets freed later after ExitBootServices().
+    //
+    if (GetDebugPrintErrorLevel () == DEBUG_ERROR) {
+      return EFI_SUCCESS;
+    }
+
+ #endif
     return EFI_NOT_FOUND;
   }
 
