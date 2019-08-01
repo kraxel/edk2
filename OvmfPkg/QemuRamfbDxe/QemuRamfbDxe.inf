@@ -29,6 +29,7 @@
   BaseLib
   BaseMemoryLib
   DebugLib
+  DebugPrintErrorLevelLib
   DevicePathLib
   FrameBufferBltLib
   MemoryAllocationLib
