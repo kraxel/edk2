@@ -28,7 +28,6 @@
   Test/Mock/Include
 
 [Includes.Common.Private]
-  Library/BrotliCustomDecompressLib/brotli/c/include
   Core/PrivateInclude
 
 [LibraryClasses]
