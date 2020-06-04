@@ -23,7 +23,6 @@ all: makerootdir subdirs
 
 LIBRARIES = Common
 APPLICATIONS = \
-  BrotliCompress \
   VfrCompile \
   EfiRom \
   GenFfs \
