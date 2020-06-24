@@ -20,6 +20,7 @@
 #include <Library/BaseMemoryLib.h>
 #include <Library/BlobVerifierLib.h>
 #include <Library/DebugLib.h>
+#include <Library/DebugPrintErrorLevelLib.h>
 #include <Library/DevicePathLib.h>
 #include <Library/HobLib.h>
 #include <Library/MemoryAllocationLib.h>
@@ -1304,6 +1305,23 @@ QemuKernelLoaderFsDxeEntrypoint (
   if ((Blob == NULL) && (mKernelNamedBlobCount == 0)) {
     DEBUG ((DEBUG_INFO, "%a: no kernel and no named blobs present -> quit\n", __func__));
     Status = EFI_NOT_FOUND;
+ #if defined (MDE_CPU_AARCH64)
+    //
+    // RHBZ#1844682
+    //
+    // If the "-kernel" QEMU option is not being used, this platform DXE driver
+    // should return EFI_NOT_FOUND, so that the DXE Core can unload it.
+    // However, the associated error message, logged by the DXE Core to the
+    // serial console, is not desired in the silent edk2-aarch64 build, given
+    // that the absence of "-kernel" is nothing out of the ordinary. Therefore,
+    // return success and stay resident. The wasted guest RAM still gets freed
+    // after ExitBootServices().
+    //
+    if (GetDebugPrintErrorLevel () == DEBUG_ERROR) {
+      Status = EFI_SUCCESS;
+    }
+
+ #endif
     goto FreeBlobs;
   }
 

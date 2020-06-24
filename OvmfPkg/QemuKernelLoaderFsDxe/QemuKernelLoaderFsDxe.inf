@@ -28,6 +28,7 @@
   BaseLib
   BaseMemoryLib
   DebugLib
+  DebugPrintErrorLevelLib
   DevicePathLib
   HobLib
   MemoryAllocationLib
