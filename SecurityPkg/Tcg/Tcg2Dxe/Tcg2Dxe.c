@@ -29,6 +29,7 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 #include <Protocol/ResetNotification.h>
 
 #include <Library/DebugLib.h>
+#include <Library/DebugPrintErrorLevelLib.h>
 #include <Library/BaseMemoryLib.h>
 #include <Library/UefiRuntimeServicesTableLib.h>
 #include <Library/UefiDriverEntryPoint.h>
@@ -2753,6 +2754,22 @@ DriverEntry (
       CompareGuid (PcdGetPtr (PcdTpmInstanceGuid), &gEfiTpmDeviceInstanceTpm12Guid))
   {
     DEBUG ((DEBUG_INFO, "No TPM2 instance required!\n"));
+#if defined (MDE_CPU_AARCH64)
+    //
+    // RHBZ#1844682
+    //
+    // If swtpm / vTPM2 is not being used, this driver should return
+    // EFI_UNSUPPORTED, so that the DXE Core can unload it. However, the
+    // associated error message, logged by the DXE Core to the serial console,
+    // is not desired in the silent edk2-aarch64 build, given that the absence
+    // of swtpm / vTPM2 is nothing out of the ordinary. Therefore, return
+    // success and stay resident. The wasted guest RAM still gets freed after
+    // ExitBootServices().
+    //
+    if (GetDebugPrintErrorLevel () == DEBUG_ERROR) {
+      return EFI_SUCCESS;
+    }
+#endif
     return EFI_UNSUPPORTED;
   }
 
