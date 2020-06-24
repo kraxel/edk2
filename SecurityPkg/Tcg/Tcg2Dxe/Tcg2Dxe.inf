@@ -55,6 +55,7 @@
   UefiRuntimeServicesTableLib
   BaseMemoryLib
   DebugLib
+  DebugPrintErrorLevelLib
   Tpm2CommandLib
   PrintLib
   UefiLib
