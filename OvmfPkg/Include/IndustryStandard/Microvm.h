@@ -3,4 +3,9 @@
 
 #define MICROVM_PSEUDO_DEVICE_ID 0xfff1
 
+/* generic event device */
+#define MICROVM_GED_MMIO_BASE         0xfea00000
+#define MICROVM_GED_MMIO_BASE_REGS    (MICROVM_GED_MMIO_BASE + 0x200)
+#define MICROVM_ACPI_GED_REG_SLEEP_CTL     0x00
+
 #endif // __MICROVM_H__

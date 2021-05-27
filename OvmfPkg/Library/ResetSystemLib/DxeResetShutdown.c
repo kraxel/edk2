@@ -16,6 +16,7 @@
 #include <OvmfPlatforms.h>          // PIIX4_PMBA_VALUE
 
 STATIC UINT16 mAcpiPmBaseAddress;
+STATIC BOOLEAN isMicrovm;
 
 EFI_STATUS
 EFIAPI
@@ -33,6 +34,9 @@ DxeResetInit (
     break;
   case INTEL_Q35_MCH_DEVICE_ID:
     mAcpiPmBaseAddress = ICH9_PMBASE_VALUE;
+    break;
+  case MICROVM_PSEUDO_DEVICE_ID:
+    isMicrovm = TRUE;
     break;
   default:
     ASSERT (FALSE);
@@ -56,7 +60,14 @@ ResetShutdown (
   VOID
   )
 {
-  IoBitFieldWrite16 (mAcpiPmBaseAddress + 4, 10, 13, 0);
-  IoOr16 (mAcpiPmBaseAddress + 4, BIT13);
+  if (isMicrovm) {
+    DEBUG ((DEBUG_INFO, "%a: microvm poweroff via ged\n", __FUNCTION__));
+    MmioWrite32 (MICROVM_GED_MMIO_BASE_REGS + MICROVM_ACPI_GED_REG_SLEEP_CTL,
+                 (1 << 5) /* enable bit */ |
+                 (5 << 2) /* typ == S5  */);
+  } else {
+    IoBitFieldWrite16 (mAcpiPmBaseAddress + 4, 10, 13, 0);
+    IoOr16 (mAcpiPmBaseAddress + 4, BIT13);
+  }
   CpuDeadLoop ();
 }
