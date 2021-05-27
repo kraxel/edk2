@@ -238,7 +238,7 @@ ScanOrAdd64BitE820Ram (
   for (Processed = 0; Processed < FwCfgSize; Processed += sizeof E820Entry) {
     QemuFwCfgReadBytes (sizeof E820Entry, &E820Entry);
     DEBUG ((
-      DEBUG_VERBOSE,
+      DEBUG_INFO,
       "%a: Base=0x%Lx Length=0x%Lx Type=%u\n",
       __FUNCTION__,
       E820Entry.BaseAddr,
@@ -259,7 +259,7 @@ ScanOrAdd64BitE820Ram (
         if (Base < End) {
           AddMemoryRangeHob (Base, End);
           DEBUG ((
-            DEBUG_VERBOSE,
+            DEBUG_INFO,
             "%a: AddMemoryRangeHob [0x%Lx, 0x%Lx)\n",
             __FUNCTION__,
             Base,
@@ -274,7 +274,7 @@ ScanOrAdd64BitE820Ram (
         if (MaxAddress && Candidate > *MaxAddress) {
           *MaxAddress = Candidate;
           DEBUG ((
-            DEBUG_VERBOSE,
+            DEBUG_INFO,
             "%a: MaxAddress=0x%Lx\n",
             __FUNCTION__,
             *MaxAddress
@@ -283,7 +283,7 @@ ScanOrAdd64BitE820Ram (
         if (LowMemory && Candidate > *LowMemory && Candidate < BASE_4GB) {
           *LowMemory = Candidate;
           DEBUG ((
-            DEBUG_VERBOSE,
+            DEBUG_INFO,
             "%a: LowMemory=0x%Lx\n",
             __FUNCTION__,
             *LowMemory
@@ -312,6 +312,7 @@ GetSystemMemorySizeBelow4gb (
   // * Since this is memory above 16MB, the 16MB must be added
   //   into the calculation to get the total memory size.
   //
+  DEBUG ((DEBUG_INFO, "%a: CMOS\n", __FUNCTION__));
 
   Cmos0x34 = (UINT8) CmosRead8 (0x34);
   Cmos0x35 = (UINT8) CmosRead8 (0x35);
@@ -335,6 +336,7 @@ GetSystemMemorySizeAbove4gb (
   // * CMOS(0x5b) is the least significant size byte
   // * The size is specified in 64kb chunks
   //
+  DEBUG ((DEBUG_INFO, "%a: CMOS\n", __FUNCTION__));
 
   Size = 0;
   for (CmosIndex = 0x5d; CmosIndex >= 0x5b; CmosIndex--) {
@@ -749,6 +751,12 @@ QemuInitializeRam (
   if (EFI_ERROR (Status) || LowerMemorySize == 0) {
     LowerMemorySize = GetSystemMemorySizeBelow4gb ();
     UpperMemorySize = GetSystemMemorySizeAbove4gb ();
+    DEBUG ((DEBUG_INFO, "%a CMOS: low %dM / high %dM\n", __FUNCTION__,
+            LowerMemorySize / 1024 / 1024,
+            UpperMemorySize / 1024 / 1024));
+  } else {
+    DEBUG ((DEBUG_INFO, "%a E820: low %dM\n", __FUNCTION__,
+            LowerMemorySize / 1024 / 1024));
   }
 
   if (mBootMode == BOOT_ON_S3_RESUME) {
@@ -845,6 +853,7 @@ QemuInitializeRam (
                CacheUncacheable);
     ASSERT_EFI_ERROR (Status);
   }
+  DEBUG ((DEBUG_INFO, "%a done\n", __FUNCTION__));
 }
 
 /**
