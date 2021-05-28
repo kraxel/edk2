@@ -94,6 +94,7 @@
   gUefiOvmfPkgTokenSpaceGuid.PcdQ35TsegMbytes
   gUefiOvmfPkgTokenSpaceGuid.PcdQ35SmramAtDefaultSmbase
   gEfiMdePkgTokenSpaceGuid.PcdGuidedExtractHandlerTableAddress
+  gEfiMdePkgTokenSpaceGuid.PcdPciExpressBaseAddress
   gEfiMdeModulePkgTokenSpaceGuid.PcdFlashNvStorageFtwSpareSize
   gEfiMdeModulePkgTokenSpaceGuid.PcdFlashNvStorageVariableSize
   gEfiMdeModulePkgTokenSpaceGuid.PcdEmuVariableNvStoreReserved
@@ -113,7 +114,6 @@
   gUefiCpuPkgTokenSpaceGuid.PcdSevEsIsEnabled
 
 [FixedPcd]
-  gEfiMdePkgTokenSpaceGuid.PcdPciExpressBaseAddress
   gEmbeddedTokenSpaceGuid.PcdMemoryTypeEfiACPIMemoryNVS
   gEmbeddedTokenSpaceGuid.PcdMemoryTypeEfiACPIReclaimMemory
   gEmbeddedTokenSpaceGuid.PcdMemoryTypeEfiReservedMemoryType

@@ -151,8 +151,8 @@ QemuUc32BaseInitialization (
     // [PcdPciExpressBaseAddress, 4GB) range require a very small number of
     // variable MTRRs (preferably 1 or 2).
     //
-    ASSERT (FixedPcdGet64 (PcdPciExpressBaseAddress) <= MAX_UINT32);
-    mQemuUc32Base = (UINT32)FixedPcdGet64 (PcdPciExpressBaseAddress);
+    ASSERT (PcdGet64 (PcdPciExpressBaseAddress) <= MAX_UINT32);
+    mQemuUc32Base = (UINT32)PcdGet64 (PcdPciExpressBaseAddress);
     return;
   }
 
