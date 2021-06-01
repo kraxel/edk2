@@ -139,6 +139,10 @@ QemuUc32BaseInitialization (
     return;
   }
 
+  if (mHostBridgeDevId == 0xffff /* microvm */) {
+    return;
+  }
+
   if (mHostBridgeDevId == INTEL_Q35_MCH_DEVICE_ID) {
     //
     // On q35, the 32-bit area that we'll mark as UC, through variable MTRRs,
