@@ -17,6 +17,7 @@ $QEMU \
     -nodefaults \
     -enable-kvm -m 1G -boot menu=on \
     -machine microvm,acpi=on,pit=off,pic=off,rtc=on \
+    -global virtio-mmio.force-legacy=false \
     -bios "$BIOS" \
     \
     -display gtk -serial vc \
