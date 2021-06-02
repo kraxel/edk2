@@ -16,8 +16,9 @@ set -ex
 $QEMU \
     -nodefaults \
     -enable-kvm -m 1G -boot menu=on \
-    -machine microvm,acpi=on,pit=off,pic=off,rtc=on \
+    -machine microvm,acpi=on,pit=off,pic=off,rtc=on,pcie=on \
     -global virtio-mmio.force-legacy=false \
+    -global virtio-pci.disable-legacy=on \
     -bios "$BIOS" \
     \
     -display gtk -serial vc \
@@ -25,7 +26,7 @@ $QEMU \
     -device isa-debugcon,iobase=0x402,chardev=firmware.log \
     \
     -drive if=none,id=disk,format="${DISK##*.}",file="$DISK" \
-    -device virtio-scsi-device \
+    -device virtio-scsi-pci \
     -device scsi-hd,drive=disk,bootindex=1 \
     \
     "$@"
