@@ -493,6 +493,22 @@ AddressWidthInitialization (
 {
   UINT64 FirstNonAddress;
 
+  if (mHostBridgeDevId == 0xffff /* microvm */) {
+    UINT32 RegEax;
+
+    /* NOTE: microvm phys-bits are reliable. */
+    AsmCpuid (0x80000000, &RegEax, NULL, NULL, NULL);
+    if (RegEax >= 0x80000008) {
+      AsmCpuid (0x80000008, &RegEax, NULL, NULL, NULL);
+      mPhysMemAddressWidth = (UINT8) RegEax;
+    } else {
+      mPhysMemAddressWidth  = 36;
+    }
+    DEBUG ((DEBUG_INFO, "%a: phys-bits is %d\n",
+            __FUNCTION__, mPhysMemAddressWidth));
+    return;
+  }
+
   //
   // As guest-physical memory size grows, the permanent PEI RAM requirements
   // are dominated by the identity-mapping page tables built by the DXE IPL.

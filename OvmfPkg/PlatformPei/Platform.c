@@ -767,13 +767,13 @@ InitializePlatform (
 
   S3Verification ();
   BootModeInitialization ();
-  AddressWidthInitialization ();
 
   //
   // Query Host Bridge DID
   //
   mHostBridgeDevId = PciRead16 (OVMF_HOSTBRIDGE_DID);
 
+  AddressWidthInitialization ();
   MaxCpuCountInitialization ();
 
   if (FeaturePcdGet (PcdSmmSmramRequire)) {
