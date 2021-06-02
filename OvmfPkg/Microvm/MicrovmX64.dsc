@@ -235,6 +235,7 @@
   SerialPortLib|MdeModulePkg/Library/BaseSerialPortLib16550/BaseSerialPortLib16550.inf
   PlatformHookLib|MdeModulePkg/Library/BasePlatformHookLibNull/BasePlatformHookLibNull.inf
   FdtLib|EmbeddedPkg/Library/FdtLib/FdtLib.inf
+  VirtioMmioDeviceLib|OvmfPkg/Library/VirtioMmioDeviceLib/VirtioMmioDeviceLib.inf
 
 [LibraryClasses.common.SEC]
   QemuFwCfgLib|OvmfPkg/Library/QemuFwCfgLib/QemuFwCfgSecLib.inf
@@ -742,6 +743,7 @@
   # device tree
   #
   ArmVirtPkg/FdtClientDxe/FdtClientDxe.inf
+  ArmVirtPkg/VirtioFdtDxe/VirtioFdtDxe.inf
 
   #
   # SMBIOS Support
