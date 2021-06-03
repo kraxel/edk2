@@ -1,0 +1,29 @@
+
+This is an *experimental* port of OVMF for the qemu microvm machine
+type.
+
+design issues
+-------------
+
+Not fully clear yet how to do hardware detection best.  Right now
+using device tree to find virtio-mmio devices and pcie host bridge.
+Can reuse existing ArmVirtPkg code that way, but Laszlo doesn't like
+the idea.
+
+known limitations
+-----------------
+ * rtc=on is required, ovmf seems to be unhappy without cmos.
+ * transitional virtio-pci devices do not work.  microvm doesn't
+   support ioports on pcie, and ovmf doesn't initialize pcie devices
+   with ioports if there is no address space for them (even though
+   pcie devices are required to be functional without ioports).
+ * can't use separate code/vars (actually an microvm limitation,
+   there is no no pflash support).
+
+known bugs
+----------
+ * timer has wrong frequency (running fast on my hardware).
+ * reset and poweroff doesn't work.
+
+--
+Gerd Hoffmann <kraxel@redhat.com>
