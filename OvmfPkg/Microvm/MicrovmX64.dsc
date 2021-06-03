@@ -53,6 +53,10 @@
   DEFINE MPT_SCSI_ENABLE         = TRUE
   DEFINE LSI_SCSI_ENABLE         = FALSE
 
+  DEFINE USB_ENABLE              = TRUE
+  DEFINE VGA_ENABLE              = TRUE
+  DEFINE SHELL_ENABLE            = TRUE
+
   #
   # Flash size selection. Setting FD_SIZE_IN_KB on the command line directly to
   # one of the supported values, in place of any of the convenience macros, is
@@ -687,7 +691,9 @@
   PcAtChipsetPkg/PcatRealTimeClockRuntimeDxe/PcatRealTimeClockRuntimeDxe.inf
   MdeModulePkg/Universal/DriverHealthManagerDxe/DriverHealthManagerDxe.inf
   MdeModulePkg/Universal/BdsDxe/BdsDxe.inf
+!if $(VGA_ENABLE) == TRUE
   MdeModulePkg/Logo/LogoDxe.inf
+!endif
   MdeModulePkg/Application/UiApp/UiApp.inf {
     <LibraryClasses>
       NULL|MdeModulePkg/Library/DeviceManagerUiLib/DeviceManagerUiLib.inf
@@ -737,9 +743,11 @@
   MdeModulePkg/Universal/DisplayEngineDxe/DisplayEngineDxe.inf
   MdeModulePkg/Universal/MemoryTest/NullMemoryTestDxe/NullMemoryTestDxe.inf
 
+!if $(VGA_ENABLE) == TRUE
   OvmfPkg/QemuVideoDxe/QemuVideoDxe.inf
   OvmfPkg/QemuRamfbDxe/QemuRamfbDxe.inf
   OvmfPkg/VirtioGpuDxe/VirtioGpu.inf
+!endif
 
   #
   # ISA Support
@@ -789,6 +797,7 @@
 !endif
   OvmfPkg/VirtioNetDxe/VirtioNet.inf
 
+!if $(USB_ENABLE) == TRUE
   #
   # Usb Support
   #
@@ -798,7 +807,9 @@
   MdeModulePkg/Bus/Usb/UsbBusDxe/UsbBusDxe.inf
   MdeModulePkg/Bus/Usb/UsbKbDxe/UsbKbDxe.inf
   MdeModulePkg/Bus/Usb/UsbMassStorageDxe/UsbMassStorageDxe.inf
+!endif
 
+!if $(SHELL_ENABLE) == TRUE
 !if $(TOOL_CHAIN_TAG) != "XCODE5"
   ShellPkg/DynamicCommand/TftpDynamicCommand/TftpDynamicCommand.inf {
     <PcdsFixedAtBuild>
@@ -835,6 +846,7 @@
       gEfiShellPkgTokenSpaceGuid.PcdShellLibAutoInitialize|FALSE
       gEfiMdePkgTokenSpaceGuid.PcdUefiLibMaxPrintBufferSize|8000
   }
+!endif
 
   OvmfPkg/PlatformDxe/Platform.inf
   OvmfPkg/IoMmuDxe/IoMmuDxe.inf

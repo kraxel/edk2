@@ -277,14 +277,18 @@ INF  OvmfPkg/VirtioFsDxe/VirtioFsDxe.inf
 INF ArmVirtPkg/FdtClientDxe/FdtClientDxe.inf
 INF ArmVirtPkg/VirtioFdtDxe/VirtioFdtDxe.inf
 
+!if $(SHELL_ENABLE) == TRUE
 !if $(TOOL_CHAIN_TAG) != "XCODE5"
 INF  ShellPkg/DynamicCommand/TftpDynamicCommand/TftpDynamicCommand.inf
 INF  ShellPkg/DynamicCommand/HttpDynamicCommand/HttpDynamicCommand.inf
 INF  OvmfPkg/LinuxInitrdDynamicShellCommand/LinuxInitrdDynamicShellCommand.inf
 !endif
 INF  ShellPkg/Application/Shell/Shell.inf
+!endif
 
+!if $(VGA_ENABLE) == TRUE
 INF MdeModulePkg/Logo/LogoDxe.inf
+!endif
 
 #
 # Network modules
@@ -297,6 +301,7 @@ INF MdeModulePkg/Logo/LogoDxe.inf
 !include NetworkPkg/Network.fdf.inc
   INF  OvmfPkg/VirtioNetDxe/VirtioNet.inf
 
+!if $(USB_ENABLE) == TRUE
 #
 # Usb Support
 #
@@ -306,11 +311,14 @@ INF  MdeModulePkg/Bus/Pci/XhciDxe/XhciDxe.inf
 INF  MdeModulePkg/Bus/Usb/UsbBusDxe/UsbBusDxe.inf
 INF  MdeModulePkg/Bus/Usb/UsbKbDxe/UsbKbDxe.inf
 INF  MdeModulePkg/Bus/Usb/UsbMassStorageDxe/UsbMassStorageDxe.inf
+!endif
 
+!if $(VGA_ENABLE) == TRUE
 INF  OvmfPkg/QemuVideoDxe/QemuVideoDxe.inf
-
 INF  OvmfPkg/QemuRamfbDxe/QemuRamfbDxe.inf
 INF  OvmfPkg/VirtioGpuDxe/VirtioGpu.inf
+!endif
+
 INF  OvmfPkg/PlatformDxe/Platform.inf
 INF  OvmfPkg/IoMmuDxe/IoMmuDxe.inf
 
