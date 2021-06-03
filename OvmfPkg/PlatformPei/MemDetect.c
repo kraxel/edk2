@@ -745,8 +745,11 @@ QemuInitializeRam (
   //
   // Determine total memory size available
   //
-  LowerMemorySize = GetSystemMemorySizeBelow4gb ();
-  UpperMemorySize = GetSystemMemorySizeAbove4gb ();
+  Status = ScanOrAdd64BitE820Ram (FALSE, &LowerMemorySize, NULL);
+  if (EFI_ERROR (Status) || LowerMemorySize == 0) {
+    LowerMemorySize = GetSystemMemorySizeBelow4gb ();
+    UpperMemorySize = GetSystemMemorySizeAbove4gb ();
+  }
 
   if (mBootMode == BOOT_ON_S3_RESUME) {
     //
