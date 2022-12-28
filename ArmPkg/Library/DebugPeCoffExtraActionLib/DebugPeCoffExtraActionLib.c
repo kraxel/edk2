@@ -1,3 +1,5 @@
+#ifndef DISABLE_NEW_DEPRECATED_INTERFACES
+
 /**@file
 
 Copyright (c) 2006 - 2009, Intel Corporation. All rights reserved.<BR>
@@ -81,12 +83,12 @@ PeCoffLoaderRelocateImageExtraAction (
     DEBUG ((DEBUG_LOAD | DEBUG_INFO, "add-symbol-file %a 0x%p\n", DeCygwinPathIfNeeded (ImageContext->PdbPointer, Temp, sizeof (Temp)), (UINTN)(ImageContext->ImageAddress + ImageContext->SizeOfHeaders)));
  #elif __GNUC__
     // This may not work correctly if you generate PE/COFF directly as then the Offset would not be required
-    DEBUG ((DEBUG_LOAD | DEBUG_INFO, "add-symbol-file %a 0x%p\n", DeCygwinPathIfNeeded (ImageContext->PdbPointer, Temp, sizeof (Temp)), (UINTN)(ImageContext->ImageAddress + ImageContext->SizeOfHeaders)));
+    DEBUG ((EFI_D_LOAD | EFI_D_INFO, "add-symbol-file %a 0x%p\n", DeCygwinPathIfNeeded (ImageContext->PdbPointer, Temp, sizeof (Temp)), (UINTN)(ImageContext->ImageAddress + ImageContext->SizeOfHeaders)));
  #else
-    DEBUG ((DEBUG_LOAD | DEBUG_INFO, "Loading driver at 0x%11p EntryPoint=0x%11p\n", (VOID *)(UINTN)ImageContext->ImageAddress, FUNCTION_ENTRY_POINT (ImageContext->EntryPoint)));
+    DEBUG ((EFI_D_LOAD | EFI_D_INFO, "Loading driver at 0x%11p EntryPoint=0x%11p\n", (VOID *)(UINTN)ImageContext->ImageAddress, FUNCTION_ENTRY_POINT (ImageContext->EntryPoint)));
  #endif
   } else {
-    DEBUG ((DEBUG_LOAD | DEBUG_INFO, "Loading driver at 0x%11p EntryPoint=0x%11p\n", (VOID *)(UINTN)ImageContext->ImageAddress, FUNCTION_ENTRY_POINT (ImageContext->EntryPoint)));
+    DEBUG ((EFI_D_LOAD | EFI_D_INFO, "Loading driver at 0x%11p EntryPoint=0x%11p\n", (VOID *)(UINTN)ImageContext->ImageAddress, FUNCTION_ENTRY_POINT (ImageContext->EntryPoint)));
   }
 }
 
@@ -107,10 +109,10 @@ PeCoffLoaderUnloadImageExtraAction (
   )
 {
  #if !defined (MDEPKG_NDEBUG)
-  CHAR8  Temp[512];
+    CHAR8 Temp[512];
  #endif
 
-  if (ImageContext->PdbPointer) {
+    if (ImageContext->PdbPointer) {
  #ifdef __CC_ARM
     // Print out the command for the RVD debugger to load symbols for this image
     DEBUG ((DEBUG_LOAD | DEBUG_INFO, "unload symbols_only %a\n", DeCygwinPathIfNeeded (ImageContext->PdbPointer, Temp, sizeof (Temp))));
@@ -124,3 +126,5 @@ PeCoffLoaderUnloadImageExtraAction (
     DEBUG ((DEBUG_LOAD | DEBUG_INFO, "Unloading driver at 0x%11p\n", (VOID *)(UINTN)ImageContext->ImageAddress));
   }
 }
+
+#endif // DISABLE_NEW_DEPRECATED_INTERFACES

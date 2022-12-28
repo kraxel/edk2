@@ -41,7 +41,8 @@
   DebugLib
   PcdLib
   IoLib
-  PeCoffLib
+  PeCoffLib2
+  UefiImageLib
   LzmaDecompressLib
   RiscVSbiLib
   PrePiLib

@@ -37,6 +37,7 @@
   SerialPortLib
   PrintLib
   SynchronizationLib
-  PeCoffGetEntryPointLib
+  PeCoffLib2
+  UefiImageLib
   MemoryAllocationLib
   DebugLib

@@ -29,7 +29,7 @@
 #define EFI_MEMORY_INTERNAL_MASK  0x0700000000000000ULL
 
 STATIC CONFIDENTIAL_COMPUTING_SNP_BLOB_LOCATION  mSnpBootDxeTable = {
-  SIGNATURE_32 ('A',                                    'M', 'D', 'E'),
+  SIGNATURE_32 ('A', 'M', 'D', 'E'),
   1,
   0,
   (UINT64)(UINTN)FixedPcdGet32 (PcdOvmfSnpSecretsBase),
@@ -43,8 +43,6 @@ STATIC EFI_HANDLE  mAmdSevDxeHandle = NULL;
 STATIC BOOLEAN  mAcceptAllMemoryAtEBS = TRUE;
 
 STATIC EFI_EVENT  mAcceptAllMemoryEvent = NULL;
-
-#define IS_ALIGNED(x, y)  ((((x) & ((y) - 1)) == 0))
 
 STATIC
 EFI_STATUS

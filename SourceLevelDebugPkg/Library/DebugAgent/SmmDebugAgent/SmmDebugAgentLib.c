@@ -267,10 +267,6 @@ InitializeDebugAgent (
       }
 
       //
-      // Find and report PE/COFF image info to HOST
-      //
-      FindAndReportModuleImageInfo (SIZE_4KB);
-      //
       // Restore saved IDT entries
       //
       CopyMem ((VOID *)IdtDescriptor.Base, &IdtEntry, 33 * sizeof (IA32_IDT_GATE_DESCRIPTOR));
@@ -379,8 +375,6 @@ InitializeDebugAgent (
         //
         SaveAndSetDebugTimerInterrupt (TRUE);
         EnableInterrupts ();
-
-        FindAndReportModuleImageInfo (SIZE_4KB);
       }
 
       break;
