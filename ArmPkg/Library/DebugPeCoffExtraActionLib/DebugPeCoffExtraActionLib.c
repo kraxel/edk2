@@ -1,3 +1,5 @@
+#ifndef DISABLE_NEW_DEPRECATED_INTERFACES
+
 /**@file
 
 Copyright (c) 2006 - 2009, Intel Corporation. All rights reserved.<BR>
@@ -79,19 +81,19 @@ PeCoffLoaderRelocateImageExtraAction (
  #ifdef __CC_ARM
  #if (__ARMCC_VERSION < 500000)
     // Print out the command for the RVD debugger to load symbols for this image
-    DEBUG ((DEBUG_LOAD | DEBUG_INFO, "load /a /ni /np %a &0x%p\n", DeCygwinPathIfNeeded (ImageContext->PdbPointer, Temp, sizeof (Temp)), (UINTN)(ImageContext->ImageAddress + ImageContext->SizeOfHeaders)));
+    DEBUG ((EFI_D_LOAD | EFI_D_INFO, "load /a /ni /np %a &0x%p\n", DeCygwinPathIfNeeded (ImageContext->PdbPointer, Temp, sizeof (Temp)), (UINTN)ImageContext->ImageAddress));
  #else
     // Print out the command for the DS-5 to load symbols for this image
-    DEBUG ((DEBUG_LOAD | DEBUG_INFO, "add-symbol-file %a 0x%p\n", DeCygwinPathIfNeeded (ImageContext->PdbPointer, Temp, sizeof (Temp)), (UINTN)(ImageContext->ImageAddress + ImageContext->SizeOfHeaders)));
+    DEBUG ((EFI_D_LOAD | EFI_D_INFO, "add-symbol-file %a 0x%p\n", DeCygwinPathIfNeeded (ImageContext->PdbPointer, Temp, sizeof (Temp)), (UINTN)(ImageContext->ImageAddress + ImageContext->SizeOfHeaders)));
  #endif
  #elif __GNUC__
     // This may not work correctly if you generate PE/COFF directly as then the Offset would not be required
-    DEBUG ((DEBUG_LOAD | DEBUG_INFO, "add-symbol-file %a 0x%p\n", DeCygwinPathIfNeeded (ImageContext->PdbPointer, Temp, sizeof (Temp)), (UINTN)(ImageContext->ImageAddress + ImageContext->SizeOfHeaders)));
+    DEBUG ((EFI_D_LOAD | EFI_D_INFO, "add-symbol-file %a 0x%p\n", DeCygwinPathIfNeeded (ImageContext->PdbPointer, Temp, sizeof (Temp)), (UINTN)(ImageContext->ImageAddress + ImageContext->SizeOfHeaders)));
  #else
-    DEBUG ((DEBUG_LOAD | DEBUG_INFO, "Loading driver at 0x%11p EntryPoint=0x%11p\n", (VOID *)(UINTN)ImageContext->ImageAddress, FUNCTION_ENTRY_POINT (ImageContext->EntryPoint)));
+    DEBUG ((EFI_D_LOAD | EFI_D_INFO, "Loading driver at 0x%11p EntryPoint=0x%11p\n", (VOID *)(UINTN)ImageContext->ImageAddress, FUNCTION_ENTRY_POINT (ImageContext->EntryPoint)));
  #endif
   } else {
-    DEBUG ((DEBUG_LOAD | DEBUG_INFO, "Loading driver at 0x%11p EntryPoint=0x%11p\n", (VOID *)(UINTN)ImageContext->ImageAddress, FUNCTION_ENTRY_POINT (ImageContext->EntryPoint)));
+    DEBUG ((EFI_D_LOAD | EFI_D_INFO, "Loading driver at 0x%11p EntryPoint=0x%11p\n", (VOID *)(UINTN)ImageContext->ImageAddress, FUNCTION_ENTRY_POINT (ImageContext->EntryPoint)));
   }
 }
 
@@ -111,11 +113,17 @@ PeCoffLoaderUnloadImageExtraAction (
   IN OUT PE_COFF_LOADER_IMAGE_CONTEXT  *ImageContext
   )
 {
+  << << <<< HEAD
  #if !defined (MDEPKG_NDEBUG)
   CHAR8  Temp[512];
  #endif
+  == == == =
+ #if !defined (MDEPKG_NDEBUG)
+    CHAR8 Temp[512];
+ #endif
+    >> >> >>> 77038c93380f (SecurePE:Replaced old PE loader with Secure one.)
 
-  if (ImageContext->PdbPointer) {
+    if (ImageContext->PdbPointer) {
  #ifdef __CC_ARM
     // Print out the command for the RVD debugger to load symbols for this image
     DEBUG ((DEBUG_LOAD | DEBUG_INFO, "unload symbols_only %a\n", DeCygwinPathIfNeeded (ImageContext->PdbPointer, Temp, sizeof (Temp))));
@@ -129,3 +137,5 @@ PeCoffLoaderUnloadImageExtraAction (
     DEBUG ((DEBUG_LOAD | DEBUG_INFO, "Unloading driver at 0x%11p\n", (VOID *)(UINTN)ImageContext->ImageAddress));
   }
 }
+
+#endif // DISABLE_NEW_DEPRECATED_INTERFACES

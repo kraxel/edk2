@@ -1,3 +1,5 @@
+#ifndef DISABLE_NEW_DEPRECATED_INTERFACES
+
 /** @file
   EFI image format for PE32, PE32+ and TE. Please note some data structures are
   different for PE32 and PE32+. EFI_IMAGE_NT_HEADERS32 is for PE32 and
@@ -25,7 +27,7 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 #define EFI_IMAGE_SUBSYSTEM_EFI_APPLICATION          10
 #define EFI_IMAGE_SUBSYSTEM_EFI_BOOT_SERVICE_DRIVER  11
 #define EFI_IMAGE_SUBSYSTEM_EFI_RUNTIME_DRIVER       12
-#define EFI_IMAGE_SUBSYSTEM_SAL_RUNTIME_DRIVER       13///< defined PI Specification, 1.0
+#define EFI_IMAGE_SUBSYSTEM_SAL_RUNTIME_DRIVER       13 ///< defined PI Specification, 1.0
 
 //
 // PE32+ Machine type for EFI images
@@ -762,3 +764,5 @@ typedef union {
 } EFI_IMAGE_OPTIONAL_HEADER_PTR_UNION;
 
 #endif
+
+#endif // DISABLE_NEW_DEPRECATED_INTERFACES

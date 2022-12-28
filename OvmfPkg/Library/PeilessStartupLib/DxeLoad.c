@@ -156,7 +156,8 @@ DxeLoadCore (
   UINT64                DxeCoreSize;
   EFI_PHYSICAL_ADDRESS  DxeCoreEntryPoint;
   EFI_PEI_FILE_HANDLE   FileHandle;
-  VOID                  *PeCoffImage;
+  IN  VOID              *UefiImage;
+  IN  UINT32            UefiImageSize;
 
   //
   // Look in all the FVs present and find the DXE Core FileHandle
@@ -171,12 +172,12 @@ DxeLoadCore (
   //
   // Load the DXE Core from a Firmware Volume.
   //
-  Status = FfsFindSectionData (EFI_SECTION_PE32, FileHandle, &PeCoffImage);
+  Status = FfsFindSectionData (EFI_SECTION_PE32, FileHandle, &UefiImage, &UefiImageSize);
   if (EFI_ERROR (Status)) {
     return Status;
   }
 
-  Status = LoadPeCoffImage (PeCoffImage, &DxeCoreAddress, &DxeCoreSize, &DxeCoreEntryPoint);
+  Status = LoadUefiImage (UefiImage, UefiImageSize, &DxeCoreAddress, &DxeCoreSize, &DxeCoreEntryPoint);
   ASSERT_EFI_ERROR (Status);
 
   //

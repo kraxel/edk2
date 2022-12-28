@@ -34,25 +34,25 @@ UINTN  mHashInterfaceCount = 0;
   @retval EFI_SUCCESS          Hash sequence start and HandleHandle returned.
   @retval EFI_OUT_OF_RESOURCES No enough resource to start hash.
 **/
-EFI_STATUS
+BOOLEAN
 EFIAPI
 HashStart (
-  OUT HASH_HANDLE  *HashHandle
+  OUT VOID  **HashHandle
   )
 {
-  HASH_HANDLE  HashCtx;
+  VOID  *HashCtx;
 
   if (mHashInterfaceCount == 0) {
     ASSERT (FALSE);
-    return EFI_UNSUPPORTED;
+    return FALSE;
   }
 
-  HashCtx = 0;
+  HashCtx = NULL;
   mHashInterface.HashInit (&HashCtx);
 
   *HashHandle = HashCtx;
 
-  return EFI_SUCCESS;
+  return TRUE;
 }
 
 /**
@@ -64,22 +64,22 @@ HashStart (
 
   @retval EFI_SUCCESS     Hash sequence updated.
 **/
-EFI_STATUS
+BOOLEAN
 EFIAPI
 HashUpdate (
-  IN HASH_HANDLE  HashHandle,
-  IN VOID         *DataToHash,
-  IN UINTN        DataToHashLen
+  IN VOID        *HashHandle,
+  IN CONST VOID  *DataToHash,
+  IN UINTN       DataToHashLen
   )
 {
   if (mHashInterfaceCount == 0) {
     ASSERT (FALSE);
-    return EFI_UNSUPPORTED;
+    return FALSE;
   }
 
   mHashInterface.HashUpdate (HashHandle, DataToHash, DataToHashLen);
 
-  return EFI_SUCCESS;
+  return TRUE;
 }
 
 /**
@@ -96,7 +96,7 @@ HashUpdate (
 EFI_STATUS
 EFIAPI
 HashCompleteAndExtend (
-  IN HASH_HANDLE          HashHandle,
+  IN VOID                 *HashHandle,
   IN TPMI_DH_PCR          PcrIndex,
   IN VOID                 *DataToHash,
   IN UINTN                DataToHashLen,
@@ -154,8 +154,8 @@ HashAndExtend (
   OUT TPML_DIGEST_VALUES  *DigestList
   )
 {
-  HASH_HANDLE  HashHandle;
-  EFI_STATUS   Status;
+  VOID        *HashHandle;
+  EFI_STATUS  Status;
 
   if (mHashInterfaceCount == 0) {
     ASSERT (FALSE);

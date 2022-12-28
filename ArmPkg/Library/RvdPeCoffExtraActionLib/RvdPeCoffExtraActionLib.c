@@ -1,3 +1,5 @@
+#ifndef DISABLE_NEW_DEPRECATED_INTERFACES
+
 /**@file
 
 Copyright (c) 2006 - 2009, Intel Corporation. All rights reserved.<BR>
@@ -113,7 +115,7 @@ PeCoffLoaderRelocateImageExtraAction (
   CHAR8  Buffer[256];
 
  #if (__ARMCC_VERSION < 500000)
-  AsciiSPrint (Buffer, sizeof (Buffer), "load /a /ni /np \"%a\" &0x%08x\n", ImageContext->PdbPointer, (UINTN)(ImageContext->ImageAddress + ImageContext->SizeOfHeaders));
+  AsciiSPrint (Buffer, sizeof (Buffer), "load /a /ni /np \"%a\" &0x%08x\n", ImageContext->PdbPointer, (UINTN)ImageContext->ImageAddress);
  #else
   AsciiSPrint (Buffer, sizeof (Buffer), "add-symbol-file %a 0x%08x\n", ImageContext->PdbPointer, (UINTN)(ImageContext->ImageAddress + ImageContext->SizeOfHeaders));
  #endif
@@ -145,3 +147,5 @@ PeCoffLoaderUnloadImageExtraAction (
 
   WriteStringToFile (Buffer, AsciiStrSize (Buffer));
 }
+
+#endif // DISABLE_NEW_DEPRECATED_INTERFACES
