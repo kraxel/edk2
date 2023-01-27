@@ -163,6 +163,7 @@ INF  UefiCpuPkg/CpuMpPei/CpuMpPei.inf
 INF  OvmfPkg/AmdSev/SecretPei/SecretPei.inf
 
 !include OvmfPkg/Include/Fdf/OvmfTpmPei.fdf.inc
+!include OvmfPkg/Include/Fdf/OvmfCryptoPei.fdf.inc
 
 ################################################################################
 
@@ -319,6 +320,11 @@ INF  MdeModulePkg/Universal/Variable/RuntimeDxe/VariableRuntimeDxe.inf
 # TPM support
 #
 !include OvmfPkg/Include/Fdf/OvmfTpmDxe.fdf.inc
+
+#
+# Crypto support
+#
+!include OvmfPkg/Include/Fdf/OvmfCryptoDxeSmm.fdf.inc
 
 ################################################################################
 
