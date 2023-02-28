@@ -63,6 +63,7 @@
   MdePkg/Library/BasePeCoffLib/BasePeCoffLib.inf
   MdePkg/Library/BasePeCoffExtraActionLibNull/BasePeCoffExtraActionLibNull.inf
   MdePkg/Library/BasePeCoffLib2/BasePeCoffLib2.inf
+  MdePkg/Library/BaseUefiImageLib/BaseUefiImageLibPeCoff.inf
   MdePkg/Library/BasePerformanceLibNull/BasePerformanceLibNull.inf
   MdePkg/Library/BasePostCodeLibDebug/BasePostCodeLibDebug.inf
   MdePkg/Library/BasePostCodeLibPort80/BasePostCodeLibPort80.inf

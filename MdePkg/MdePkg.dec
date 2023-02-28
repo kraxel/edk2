@@ -134,6 +134,7 @@
 
   ##  @libraryclass  Provides services to load and relocate a PE/COFF image.
   PeCoffLib2|Include/Library/PeCoffLib2.h
+  UefiImageLib|Include/Library/UefiImageLib.h
 
 
   ##  @libraryclass  Provides services to return the PCI segment information.
