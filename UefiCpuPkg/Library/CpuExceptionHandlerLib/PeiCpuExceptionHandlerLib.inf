@@ -34,7 +34,7 @@
 
 [Sources.common]
   CpuExceptionCommon.h
-  CpuExceptionCommon.c
+  CpuExceptionCommonOld.c
   PeiCpuException.c
   PeiDxeSmmCpuException.c
 

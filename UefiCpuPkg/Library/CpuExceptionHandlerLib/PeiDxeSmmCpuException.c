@@ -8,7 +8,7 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 
 #include <Library/DebugLib.h>
 #include <Library/CcExitLib.h>
-#include "CpuExceptionCommon.h"
+#include "CpuExceptionCommonOld.h"
 
 /**
   Internal worker function for common exception handler.

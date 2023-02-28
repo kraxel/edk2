@@ -8,7 +8,7 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 
 #include <PiPei.h>
 #include <Library/CcExitLib.h>
-#include "CpuExceptionCommon.h"
+#include "CpuExceptionCommonOld.h"
 
 CONST UINTN  mDoFarReturnFlag = 0;
 

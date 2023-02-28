@@ -7,7 +7,7 @@
 **/
 
 #include <PiDxe.h>
-#include "CpuExceptionCommon.h"
+#include "CpuExceptionCommonOld.h"
 #include <Library/DebugLib.h>
 #include <Library/MemoryAllocationLib.h>
 #include <Library/UefiBootServicesTableLib.h>

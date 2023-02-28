@@ -7,7 +7,7 @@
 **/
 
 #include <PiSmm.h>
-#include "CpuExceptionCommon.h"
+#include "CpuExceptionCommonOld.h"
 
 CONST UINTN  mDoFarReturnFlag = 1;
 

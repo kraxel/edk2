@@ -39,7 +39,7 @@
 
 [Sources.common]
   CpuExceptionCommon.h
-  CpuExceptionCommon.c
+  CpuExceptionCommonOld.c
   SecPeiCpuException.c
 
 [Packages]
