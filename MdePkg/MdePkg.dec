@@ -196,6 +196,11 @@
   ##
   BaseLib|Include/Library/BaseLib.h
 
+  ##  @libraryclass  Provides base safe arithmetics, reporting signed integer overflow
+  #                  and unsigned integer wraparound similarly to os/overflow.h in macOS SDK.
+  ##
+  BaseOverflowLib|Include/Library/BaseOverflowLib.h
+
   ##  @libraryclass  This library provides common functions to process the different guided section data.
   ExtractGuidedSectionLib|Include/Library/ExtractGuidedSectionLib.h
 
