@@ -108,7 +108,8 @@ EFIAPI
 ProfileProtocolRegisterImage (
   IN EDKII_MEMORY_PROFILE_PROTOCOL    *This,
   IN EFI_DEVICE_PATH_PROTOCOL         *FilePath,
-  IN UEFI_IMAGE_LOADER_IMAGE_CONTEXT  *ImageContext,
+  IN PHYSICAL_ADDRESS                 ImageBase,
+  IN UINT64                           ImageSize,
   IN EFI_FV_FILETYPE                  FileType
   );
 
@@ -1502,10 +1503,14 @@ EFIAPI
 ProfileProtocolRegisterImage (
   IN EDKII_MEMORY_PROFILE_PROTOCOL    *This,
   IN EFI_DEVICE_PATH_PROTOCOL         *FilePath,
-  IN UEFI_IMAGE_LOADER_IMAGE_CONTEXT  *ImageContext,
+  IN PHYSICAL_ADDRESS                 ImageBase,
+  IN UINT64                           ImageSize,
   IN EFI_FV_FILETYPE                  FileType
   )
 {
+  UEFI_IMAGE_LOADER_IMAGE_CONTEXT *ImageContext = NULL;
+
+  UefiImageInitializeContext(ImageContext, (VOID*)(UINTN)ImageBase, ImageSize);
   return RegisterMemoryProfileImage (FilePath, FileType, ImageContext);
 }
 
