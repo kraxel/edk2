@@ -15,7 +15,6 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 // Macros to check and set alignment
 //
 #define ASSERT_ALIGNED(addr, size)  ASSERT (!((UINT32) (addr) & (size - 1)))
-#define IS_ALIGNED(addr, size)      !((UINT32) (addr) & (size - 1))
 
 //
 // Debug macro
