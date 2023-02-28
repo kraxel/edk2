@@ -34,7 +34,7 @@
 
 [Sources.common]
   CpuExceptionCommon.h
-  CpuExceptionCommonOld.c
+  CpuExceptionCommon.c
   PeiDxeSmmCpuException.c
   DxeException.c
 
@@ -57,7 +57,10 @@
   PrintLib
   SynchronizationLib
   LocalApicLib
-  PeCoffGetEntryPointLib
+  UefiImageLib
   MemoryAllocationLib
   DebugLib
   CcExitLib
+
+[Guids]
+  gEfiDebugImageInfoTableGuid  ## CONSUMES ## SystemTable
