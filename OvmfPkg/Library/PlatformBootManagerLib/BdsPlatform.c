@@ -1854,6 +1854,12 @@ PlatformBootManagerAfterConsole (
     LOAD_OPTION_ACTIVE
     );
 
+  PlatformRegisterFvBootOption (
+    &gUiAppFileGuid,
+    L"EFI Firmware Setup",
+    LOAD_OPTION_ACTIVE | LOAD_OPTION_CATEGORY_APP
+    );
+
   RemoveStaleFvFileOptions ();
   SetBootOrderFromQemu ();
 
