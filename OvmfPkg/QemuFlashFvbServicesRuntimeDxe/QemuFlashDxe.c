@@ -37,9 +37,18 @@ QemuFlashBeforeProbe (
   IN  UINTN                 FdBlockCount
   )
 {
-  //
-  // Do nothing
-  //
+  EFI_STATUS  Status;
+
+  if (MemEncryptSevIsEnabled ()) {
+    Status = MemEncryptSevClearMmioPageEncMask (
+               0,
+               BaseAddress,
+               EFI_SIZE_TO_PAGES (FdBlockSize * FdBlockCount)
+               );
+    if (EFI_ERROR (Status)) {
+      DEBUG ((DEBUG_WARN, "%a: MemEncryptSevClearMmioPageEncMask: %r\n", __func__, Status));
+    }
+  }
 }
 
 /**
