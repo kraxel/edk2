@@ -264,6 +264,27 @@ QemuFlashInitialize (
   ASSERT (PcdGet32 (PcdOvmfFirmwareFdSize) % mFdBlockSize == 0);
   mFdBlockCount = PcdGet32 (PcdOvmfFirmwareFdSize) / mFdBlockSize;
 
+  switch (PcdGet64 (PcdConfidentialComputingGuestAttr)) {
+    case CCAttrNotEncrypted:
+      DEBUG ((DEBUG_INFO, "%a: cc=off\n", __func__));
+      break;
+    case CCAttrAmdSev:
+      DEBUG ((DEBUG_INFO, "%a: cc=sev\n", __func__));
+      break;
+    case CCAttrAmdSevEs:
+      DEBUG ((DEBUG_INFO, "%a: cc=sev-es\n", __func__));
+      break;
+    case CCAttrAmdSevSnp:
+      DEBUG ((DEBUG_INFO, "%a: cc=sev-snp\n", __func__));
+      break;
+    case CCAttrIntelTdx:
+      DEBUG ((DEBUG_INFO, "%a: cc=tdx\n", __func__));
+      break;
+    default:
+      DEBUG ((DEBUG_INFO, "%a: cc=unknown\n", __func__));
+      break;
+  }
+
   //
   // execute module specific hooks before probing the flash
   //

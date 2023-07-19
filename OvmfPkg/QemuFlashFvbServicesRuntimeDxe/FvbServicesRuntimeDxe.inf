@@ -76,6 +76,7 @@
   gUefiOvmfPkgTokenSpaceGuid.PcdOvmfFirmwareBlockSize
 
 [Pcd]
+  gEfiMdePkgTokenSpaceGuid.PcdConfidentialComputingGuestAttr
   gEfiMdeModulePkgTokenSpaceGuid.PcdFlashNvStorageFtwWorkingBase
   gEfiMdeModulePkgTokenSpaceGuid.PcdFlashNvStorageFtwSpareBase
   gEfiMdeModulePkgTokenSpaceGuid.PcdFlashNvStorageVariableBase64
