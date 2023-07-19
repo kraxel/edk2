@@ -38,10 +38,24 @@ QemuFlashBeforeProbe (
   IN  UINTN                 FdBlockCount
   )
 {
-  EFI_STATUS  Status;
-  EFI_GUID    *Guid;
+  EFI_STATUS                           Status;
+  EFI_GUID                             *Guid;
+  MEM_ENCRYPT_SEV_ADDRESS_RANGE_STATE  State;
 
   if (MemEncryptSevIsEnabled ()) {
+    State = MemEncryptSevGetAddressRangeState (0, BaseAddress, EFI_PAGE_SIZE);
+    switch (State) {
+      case MemEncryptSevAddressRangeUnencrypted:
+        DEBUG ((DEBUG_INFO, "%a/sev: %lx is unencrypted.\n", __func__, BaseAddress));
+        break;
+      case MemEncryptSevAddressRangeEncrypted:
+        DEBUG ((DEBUG_INFO, "%a/sev: %lx is encrypted.\n", __func__, BaseAddress));
+        break;
+      default:
+        DEBUG ((DEBUG_INFO, "%a/sev: unexpected state (%d)\n", __func__, State));
+        break;
+    }
+
     Guid = (VOID *)(BaseAddress + 16);
     if (CompareMem (Guid, &gEfiSystemNvDataFvGuid, sizeof (EFI_GUID)) == 0) {
       DEBUG ((DEBUG_INFO, "%a/sev: guid ok (assuming ram/rom).\n", __func__));
