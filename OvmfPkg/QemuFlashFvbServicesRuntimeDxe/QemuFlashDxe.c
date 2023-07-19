@@ -9,6 +9,7 @@
 
 **/
 
+#include <Library/BaseMemoryLib.h>
 #include <Library/UefiRuntimeLib.h>
 #include <Library/MemEncryptSevLib.h>
 #include <Library/CcExitLib.h>
@@ -38,8 +39,17 @@ QemuFlashBeforeProbe (
   )
 {
   EFI_STATUS  Status;
+  EFI_GUID    *Guid;
 
   if (MemEncryptSevIsEnabled ()) {
+    Guid = (VOID *)(BaseAddress + 16);
+    if (CompareMem (Guid, &gEfiSystemNvDataFvGuid, sizeof (EFI_GUID)) == 0) {
+      DEBUG ((DEBUG_INFO, "%a/sev: guid ok (assuming ram/rom).\n", __func__));
+      return;
+    }
+
+    DEBUG ((DEBUG_INFO, "%a/sev: guid mismatch (assuming flash).\n", __func__));
+    DEBUG ((DEBUG_INFO, "%a/sev: trying mmio setup for %lx.\n", __func__, BaseAddress));
     Status = MemEncryptSevClearMmioPageEncMask (
                0,
                BaseAddress,
@@ -47,6 +57,12 @@ QemuFlashBeforeProbe (
                );
     if (EFI_ERROR (Status)) {
       DEBUG ((DEBUG_WARN, "%a: MemEncryptSevClearMmioPageEncMask: %r\n", __func__, Status));
+    }
+
+    if (CompareMem (Guid, &gEfiSystemNvDataFvGuid, sizeof (EFI_GUID)) == 0) {
+      DEBUG ((DEBUG_INFO, "%a/sev: guid ok.\n", __func__));
+    } else {
+      DEBUG ((DEBUG_INFO, "%a/sev: guid mismatch. Oops.\n", __func__));
     }
   }
 }

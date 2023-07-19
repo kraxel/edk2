@@ -58,6 +58,7 @@
 [Guids]
   gEfiEventVirtualAddressChangeGuid   # ALWAYS_CONSUMED
   # gEfiEventVirtualAddressChangeGuid # Create Event: EVENT_GROUP_GUID
+  gEfiSystemNvDataFvGuid
 
 [Protocols]
   gEfiFirmwareVolumeBlockProtocolGuid           # PROTOCOL SOMETIMES_PRODUCED
