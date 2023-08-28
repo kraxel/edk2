@@ -611,6 +611,52 @@ fread (
   return 0;
 }
 
+int
+access(
+  const char*,
+  int
+  )
+{
+  return -1;
+}
+
+int
+open (
+  const char *,
+  int
+  )
+{
+  return -1;
+}
+
+ssize_t
+read (
+  int,
+  void*,
+  size_t
+  )
+{
+  return -1;
+}
+
+ssize_t
+write (
+  int,
+  const void*,
+  size_t
+  )
+{
+  return -1;
+}
+
+int
+close (
+  int
+  )
+{
+  return -1;
+}
+
 uid_t
 getuid (
   void
