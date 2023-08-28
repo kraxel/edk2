@@ -62,6 +62,7 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 //
 // Definitions for global constants used by CRT library routines
 //
+#define EINTR         4
 #define EINVAL        22              /* Invalid argument */
 #define EAFNOSUPPORT  47              /* Address family not supported by protocol family */
 #define INT_MAX       0x7FFFFFFF      /* Maximum (signed) int value */
@@ -89,6 +90,15 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 #define NS_INT16SZ    2   /*%< #/bytes of data in a u_int16_t */
 #define NS_INADDRSZ   4   /*%< IPv4 T_A */
 #define NS_IN6ADDRSZ  16  /*%< IPv6 T_AAAA */
+
+#define O_RDONLY        00000000
+#define O_WRONLY        00000001
+#define O_RDWR          00000002
+
+#define R_OK  4
+#define W_OK  2
+#define X_OK  1
+#define F_OK  0
 
 //
 // Basic types mapping
@@ -314,6 +324,37 @@ fprintf     (
   FILE *,
   const char *,
   ...
+  );
+
+int
+access(
+  const char*,
+  int
+  );
+
+int
+open (
+  const char *,
+  int
+  );
+
+ssize_t
+read (
+  int,
+  void*,
+  size_t
+  );
+
+ssize_t
+write (
+  int,
+  const void*,
+  size_t
+  );
+
+int
+close (
+  int
   );
 
 time_t
