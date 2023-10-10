@@ -1264,6 +1264,7 @@ GetProcessorLocationByApicId (
       *Package = 0;
     }
 
+    DEBUG ((DEBUG_INFO, "%a: no hyperthreading\n", __func__));
     return;
   }
 
@@ -1300,6 +1301,7 @@ GetProcessorLocationByApicId (
     //
     if (ExtendedTopologyEbx.Uint32 != 0) {
       TopologyLeafSupported = TRUE;
+      DEBUG ((DEBUG_INFO, "%a: ExtendedTopology, v1\n", __func__));
 
       //
       // Sub-leaf index 0 (ECX= 0 as input) provides enumeration parameters to extract
@@ -1393,6 +1395,11 @@ GetProcessorLocationByApicId (
   if (Package != NULL) {
     *Package = (InitialApicId >> (ThreadBits + CoreBits));
   }
+
+  if (*Thread && *Core && *Package) {
+    DEBUG ((DEBUG_INFO, "%a: apic id %d -> package %d / core %d / thread %d\n",
+            __func__, InitialApicId, *Package, *Core, *Thread));
+  }
 }
 
 /**
@@ -1460,6 +1467,7 @@ GetProcessorLocation2ByApicId (
   // If the V2 extended topology enumeration leaf is available, it
   // is the preferred mechanism for enumerating topology.
   //
+  DEBUG ((DEBUG_INFO, "%a: ExtendedTopology, v2\n", __func__));
   for (Index = 0; ; Index++) {
     AsmCpuidEx (
       CPUID_V2_EXTENDED_TOPOLOGY,
@@ -1471,6 +1479,9 @@ GetProcessorLocation2ByApicId (
       );
 
     LevelType = ExtendedTopologyEcx.Bits.LevelType;
+    DEBUG ((DEBUG_INFO, "%a:   %d: type %x, shift %x\n", __func__, Index,
+            ExtendedTopologyEcx.Bits.LevelType,
+            ExtendedTopologyEax.Bits.ApicIdShift));
 
     //
     // first level reported should be SMT.
@@ -1520,5 +1531,9 @@ GetProcessorLocation2ByApicId (
       //
       *Location[LevelType] &= (1 << (Bits[LevelType] - Bits[LevelType - 1])) - 1;
     }
+  }
+  if (*Thread && *Core && *Module && *Tile && *Die && *Package) {
+    DEBUG ((DEBUG_INFO, "%a: apic id %d -> package %d / die %d / tile %d / module &d / core %d / thread %d\n",
+            __func__, InitialApicId, *Package, *Die, *Tile, *Module, *Core, *Thread));
   }
 }
