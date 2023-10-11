@@ -1431,6 +1431,7 @@ GetProcessorLocation2ByApicId (
   )
 {
   CPUID_EXTENDED_TOPOLOGY_EAX  ExtendedTopologyEax;
+  CPUID_EXTENDED_TOPOLOGY_EBX  ExtendedTopologyEbx;
   CPUID_EXTENDED_TOPOLOGY_ECX  ExtendedTopologyEcx;
   UINT32                       MaxStandardCpuIdIndex;
   UINT32                       Index;
@@ -1447,6 +1448,11 @@ GetProcessorLocation2ByApicId (
   //
   AsmCpuid (CPUID_SIGNATURE, &MaxStandardCpuIdIndex, NULL, NULL, NULL);
   if (MaxStandardCpuIdIndex < CPUID_V2_EXTENDED_TOPOLOGY) {
+    ExtendedTopologyEbx.Uint32 = 0;
+  } else {
+    AsmCpuidEx (CPUID_V2_EXTENDED_TOPOLOGY, 0, NULL, &ExtendedTopologyEbx.Uint32, NULL, NULL);
+  }
+  if (ExtendedTopologyEbx.Uint32 == 0) {
     if (Die != NULL) {
       *Die = 0;
     }
