@@ -86,6 +86,82 @@ clearPageTablesMemoryLoop:
     mov     dword[ecx * 4 + PT_ADDR (0) - 4], eax
     loop    clearPageTablesMemoryLoop
 
+%if PG_5_LEVEL
+
+    ; save GetSevCBitMaskAbove31 result (cpuid changes edx)
+    mov     edi, edx
+
+    ; check for cpuid leaf 0x07
+    mov     eax, 0x00
+    cpuid
+    cmp     eax, 0x07
+    jb      Paging4Lvl
+
+    ; check for la57 (aka 5-level paging)
+    mov     eax, 0x07
+    mov     ecx, 0x00
+    cpuid
+    bt      ecx, 16
+    jnc     Paging4Lvl
+
+    ; check for cpuid leaf 0x80000001
+    mov     eax, 0x80000000
+    cpuid
+    cmp     eax, 0x80000001
+    jb      Paging4Lvl
+
+    ; check for 1g pages
+    mov     eax, 0x80000001
+    cpuid
+    bt      edx, 26
+    jnc     Paging4Lvl
+
+    ;
+    ; Use 5-level paging with gigabyte pages.
+    ;
+    ; We have 6 pages available for the early page tables,
+    ; due to the use of gigabyte pages we need three pages
+    ; and everything fits in.
+    ;
+    debugShowPostCode 0x51      ; 5-level paging
+
+    ; restore GetSevCBitMaskAbove31 result
+    mov     edx, edi
+
+    ; level 5
+    mov     dword[PT_ADDR (0)], PT_ADDR (0x1000) + PAGE_PDE_DIRECTORY_ATTR
+    mov     dword[PT_ADDR (4)], edx
+
+    ; level 4
+    mov     dword[PT_ADDR (0x1000)], PT_ADDR (0x2000) + PAGE_PDE_DIRECTORY_ATTR
+    mov     dword[PT_ADDR (0x1004)], edx
+
+    ; level 3 (four 1GB pages for the lowest 4G)
+    mov     dword[PT_ADDR (0x2000)], (0 << 30) + PAGE_PDE_LARGEPAGE_ATTR
+    mov     dword[PT_ADDR (0x2004)], edx
+    mov     dword[PT_ADDR (0x2008)], (1 << 30) + PAGE_PDE_LARGEPAGE_ATTR
+    mov     dword[PT_ADDR (0x200c)], edx
+    mov     dword[PT_ADDR (0x2010)], (2 << 30) + PAGE_PDE_LARGEPAGE_ATTR
+    mov     dword[PT_ADDR (0x2014)], edx
+    mov     dword[PT_ADDR (0x2018)], (3 << 30) + PAGE_PDE_LARGEPAGE_ATTR
+    mov     dword[PT_ADDR (0x201c)], edx
+
+    ; set la57 bit in cr4
+    mov     eax, cr4
+    bts     eax, 12
+    mov     cr4, eax
+
+    ; done
+    jmp     PageTablesReady
+
+Paging4Lvl:
+    debugShowPostCode 0x41      ; 4-level paging
+
+    ; restore GetSevCBitMaskAbove31 result
+    mov     edx, edi
+
+%endif ; PG_5_LEVEL
+
     ;
     ; Top level Page Directory Pointers (1 * 512GB entry)
     ;
@@ -117,6 +193,7 @@ pageTableEntriesLoop:
     mov     [(ecx * 8 + PT_ADDR (0x2000 - 8)) + 4], edx
     loop    pageTableEntriesLoop
 
+PageTablesReady:
     ; Clear the C-bit from the GHCB page if the SEV-ES is enabled.
     OneTimeCall   SevClearPageEncMaskForGhcbPage
 
