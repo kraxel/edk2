@@ -203,6 +203,8 @@ SmmInitPageTable (
   UINT64                    *Pml5Entry;
   UINT8                     PhysicalAddressBits;
 
+  DEBUG ((DEBUG_INFO, "%a:%d\n", __func__, __LINE__));
+
   //
   // Initialize spin lock
   //

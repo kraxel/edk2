@@ -597,6 +597,8 @@ InitPaging (
   BOOLEAN        WriteProtect;
   BOOLEAN        CetEnabled;
 
+  DEBUG ((DEBUG_INFO, "%a:%d mPagingMode = 0x%04x\n", __func__, __LINE__, mPagingMode));
+
   PERF_FUNCTION_BEGIN ();
 
   PageTable = AsmReadCr3 ();

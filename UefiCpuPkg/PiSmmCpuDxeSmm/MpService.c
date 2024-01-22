@@ -1925,6 +1925,8 @@ InitializeMpServiceData (
   UINT32                          MaxExtendedFunction;
   CPUID_VIR_PHY_ADDRESS_SIZE_EAX  VirPhyAddressSize;
 
+  DEBUG ((DEBUG_INFO, "%a:%d\n", __func__, __LINE__));
+
   //
   // Determine if this CPU supports machine check
   //

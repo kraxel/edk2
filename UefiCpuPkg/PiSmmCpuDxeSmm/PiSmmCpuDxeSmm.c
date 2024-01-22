@@ -350,6 +350,7 @@ SmmInitHandler (
   UINTN    Index;
   BOOLEAN  IsBsp;
 
+  DEBUG ((DEBUG_INFO, "%a:%d\n", __func__, __LINE__));
   //
   // Update SMM IDT entries' code segment and load IDT
   //
@@ -475,6 +476,7 @@ SmmRelocateBases (
   UINTN                 Index;
   UINTN                 BspIndex;
 
+  DEBUG ((DEBUG_INFO, "%a:%d\n", __func__, __LINE__));
   PERF_FUNCTION_BEGIN ();
 
   //
@@ -490,6 +492,9 @@ SmmRelocateBases (
   PatchInstructionX86 (gPatchSmmCr3, AsmReadCr3 (), 4);
   mSmmCr4 = (UINT32)AsmReadCr4 ();
   PatchInstructionX86 (gPatchSmmCr4, mSmmCr4 & (~CR4_CET_ENABLE), 4);
+  DEBUG ((DEBUG_INFO, "%a:%d cr0 0x%08x\n", __func__, __LINE__, mSmmCr0));
+  DEBUG ((DEBUG_INFO, "%a:%d cr3 0x%08x\n", __func__, __LINE__, AsmReadCr3 ()));
+  DEBUG ((DEBUG_INFO, "%a:%d cr4 0x%08x\n", __func__, __LINE__, mSmmCr4));
 
   //
   // Patch GDTR for SMM base relocation
@@ -515,6 +520,7 @@ SmmRelocateBases (
   // Retrieve the local APIC ID of current processor
   //
   mBspApicId = GetApicId ();
+  DEBUG ((DEBUG_INFO, "%a:%d\n", __func__, __LINE__));
 
   //
   // Relocate SM bases for all APs
@@ -528,15 +534,19 @@ SmmRelocateBases (
       //
       // Wait for this AP to finish its 1st SMI
       //
+      DEBUG ((DEBUG_INFO, "%a:%d AP Index %d\n", __func__, __LINE__, Index));
       while (!mRebased[Index]) {
       }
     } else {
       //
       // BSP will be Relocated later
       //
+      DEBUG ((DEBUG_INFO, "%a:%d BSP Index %d\n", __func__, __LINE__, Index));
       BspIndex = Index;
     }
   }
+
+  DEBUG ((DEBUG_INFO, "%a:%d\n", __func__, __LINE__));
 
   //
   // Relocate BSP's SMM base
@@ -546,8 +556,11 @@ SmmRelocateBases (
   //
   // Wait for the BSP to finish its 1st SMI
   //
+  DEBUG ((DEBUG_INFO, "%a:%d\n", __func__, __LINE__));
   while (!mRebased[BspIndex]) {
   }
+
+  DEBUG ((DEBUG_INFO, "%a:%d\n", __func__, __LINE__));
 
   //
   // Restore contents at address 0x38000
@@ -555,6 +568,7 @@ SmmRelocateBases (
   CopyMem (CpuStatePtr, &BakBuf2, sizeof (BakBuf2));
   CopyMem (U8Ptr, BakBuf, sizeof (BakBuf));
   PERF_FUNCTION_END ();
+  DEBUG ((DEBUG_INFO, "%a:%d\n", __func__, __LINE__));
 }
 
 /**
@@ -891,6 +905,7 @@ PiCpuSmmEntry (
   UINTN       ModelId;
   UINT32      Cr3;
 
+  DEBUG ((DEBUG_INFO, "%a:%d mPagingMode = 0x%04x\n", __func__, __LINE__, mPagingMode));
   PERF_FUNCTION_BEGIN ();
 
   //
@@ -1276,6 +1291,7 @@ PiCpuSmmEntry (
     DEBUG ((DEBUG_INFO, "mSmmShadowStackSize      - 0x%x\n", mSmmShadowStackSize));
   }
 
+  DEBUG ((DEBUG_INFO, "%a:%d\n", __func__, __LINE__));
   //
   // Set SMI stack for SMM base relocation
   //
@@ -1284,11 +1300,13 @@ PiCpuSmmEntry (
     (UINTN)(Stacks + mSmmStackSize - sizeof (UINTN)),
     sizeof (UINTN)
     );
+  DEBUG ((DEBUG_INFO, "%a:%d\n", __func__, __LINE__));
 
   //
   // Initialize IDT
   //
   InitializeSmmIdt ();
+  DEBUG ((DEBUG_INFO, "%a:%d\n", __func__, __LINE__));
 
   //
   // Check whether Smm Relocation is done or not.
@@ -1298,9 +1316,11 @@ PiCpuSmmEntry (
     //
     // Relocate SMM Base addresses to the ones allocated from SMRAM
     //
+    DEBUG ((DEBUG_INFO, "%a:%d\n", __func__, __LINE__));
     mRebased = (BOOLEAN *)AllocateZeroPool (sizeof (BOOLEAN) * mMaxNumberOfCpus);
     ASSERT (mRebased != NULL);
     SmmRelocateBases ();
+    DEBUG ((DEBUG_INFO, "%a:%d\n", __func__, __LINE__));
 
     //
     // Call hook for BSP to perform extra actions in normal mode after all

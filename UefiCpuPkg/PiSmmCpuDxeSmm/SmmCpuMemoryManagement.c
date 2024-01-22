@@ -798,6 +798,8 @@ PatchSmmSaveStateMap (
   UINTN  TileSize;
   UINTN  PageTableBase;
 
+  DEBUG ((DEBUG_INFO, "%a:%d mPagingMode = 0x%04x\n", __func__, __LINE__, mPagingMode));
+
   TileCodeSize  = GetSmiHandlerSize ();
   TileCodeSize  = ALIGN_VALUE (TileCodeSize, SIZE_4KB);
   TileDataSize  = (SMRAM_SAVE_STATE_MAP_OFFSET - SMM_PSD_OFFSET) + sizeof (SMRAM_SAVE_STATE_MAP);
@@ -1031,6 +1033,8 @@ SetMemMapAttributes (
   UINT64                                MemoryAttribute;
   BOOLEAN                               WriteProtect;
   BOOLEAN                               CetEnabled;
+
+  DEBUG ((DEBUG_INFO, "%a:%d mPagingMode = 0x%04x\n", __func__, __LINE__, mPagingMode));
 
   SmmGetSystemConfigurationTable (&gEdkiiPiSmmMemoryAttributesTableGuid, (VOID **)&MemoryAttributesTable);
   if (MemoryAttributesTable == NULL) {
@@ -1818,6 +1822,8 @@ EnablePageTableProtection (
   UINT64                PoolSize;
   EFI_PHYSICAL_ADDRESS  Address;
   UINTN                 PageTableBase;
+
+  DEBUG ((DEBUG_INFO, "%a:%d mPagingMode = 0x%04x\n", __func__, __LINE__, mPagingMode));
 
   if (mPageTablePool == NULL) {
     return;
