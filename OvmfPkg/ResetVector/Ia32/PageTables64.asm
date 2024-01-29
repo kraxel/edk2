@@ -108,6 +108,7 @@ clearPageTablesMemoryLoop:
     cpuid
     cmp     eax, 0x07
     jb      Paging4Lvl
+    debugShowPostCode 0xc0      ; cpuid check #0
 
     ; check for la57 (aka 5-level paging)
     mov     eax, 0x07
@@ -115,18 +116,21 @@ clearPageTablesMemoryLoop:
     cpuid
     bt      ecx, 16
     jnc     Paging4Lvl
+    debugShowPostCode 0xc1      ; cpuid check #1
 
     ; check for cpuid leaf 0x80000001
     mov     eax, 0x80000000
     cpuid
     cmp     eax, 0x80000001
     jb      Paging4Lvl
+    debugShowPostCode 0xc2      ; cpuid check #2
 
     ; check for 1g pages
     mov     eax, 0x80000001
     cpuid
     bt      edx, 26
     jnc     Paging4Lvl
+    debugShowPostCode 0xc3      ; cpuid check #3
 
     ;
     ; Use 5-level paging with gigabyte pages.
