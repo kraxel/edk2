@@ -42,8 +42,10 @@ BITS    32
                                  PAGE_READ_WRITE + \
                                  PAGE_PRESENT)
 
+%define NOT_TDX         0
 %define TDX_BSP         1
 %define TDX_AP          2
+%define TDX_AP_LA57     3
 
 ;
 ; Modified:  EAX, EBX, ECX, EDX
@@ -55,11 +57,21 @@ SetCr3ForPageTables64:
     ; the page tables. APs will spin on until byte[TDX_WORK_AREA_PGTBL_READY]
     ; is set.
     OneTimeCall   CheckTdxFeaturesBeforeBuildPagetables
+    cmp       eax, NOT_TDX
+    je        CheckSev
     cmp       eax, TDX_BSP
     je        ClearOvmfPageTables
+%if PG_5_LEVEL
     cmp       eax, TDX_AP
     je        SetCr3
+    ; TDX_AP_LA57 -> set cr4.la57
+    mov       eax, cr4
+    bts       eax, 12
+    mov       cr4, eax
+%endif
+    jmp       SetCr3
 
+CheckSev:
     ; Check whether the SEV is active and populate the SevEsWorkArea
     OneTimeCall   CheckSevFeatures
 
@@ -152,7 +164,7 @@ clearPageTablesMemoryLoop:
     mov     cr4, eax
 
     ; done
-    jmp     PageTablesReady
+    jmp     PageTablesReadyLa57
 
 Paging4Lvl:
     debugShowPostCode 0x41      ; 4-level paging
@@ -192,6 +204,19 @@ pageTableEntriesLoop:
     mov     [ecx * 8 + PT_ADDR (0x2000 - 8)], eax
     mov     [(ecx * 8 + PT_ADDR (0x2000 - 8)) + 4], edx
     loop    pageTableEntriesLoop
+
+%if PG_5_LEVEL
+
+PageTablesReadyLa57:
+    ; Clear the C-bit from the GHCB page if the SEV-ES is enabled.
+    ; FIXME
+
+    ; TDX will do some PostBuildPages task, such as setting
+    ; byte[TDX_WORK_AREA_PGTBL_READY].
+    OneTimeCall   TdxPostBuildPageTablesLa57
+    jmp SetCr3
+
+%endif
 
 PageTablesReady:
     ; Clear the C-bit from the GHCB page if the SEV-ES is enabled.
