@@ -132,8 +132,18 @@ clearPageTablesMemoryLoop:
     ; Use 5-level paging with gigabyte pages.
     ;
     ; We have 6 pages available for the early page tables,
-    ; due to the use of gigabyte pages we need three pages
-    ; and everything fits in.
+    ; we use four of them:
+    ;    PT_ADDR(0)      - level 5 directory
+    ;    PT_ADDR(0x1000) - level 4 directory
+    ;    PT_ADDR(0x2000) - level 2 directory (0 -> 1GB)
+    ;    PT_ADDR(0x3000) - level 3 directory
+    ;
+    ; The level 2 directory for the first gigabyte has the same
+    ; physical address in both 4-level and 5-level paging mode,
+    ; SEV depends on this.
+    ;
+    ; The 1 GB -> 4 GB range is mapped using 1G pages in the
+    ; level 3 directory.
     ;
     debugShowPostCode 0x51      ; 5-level paging
 
@@ -145,18 +155,31 @@ clearPageTablesMemoryLoop:
     mov     dword[PT_ADDR (4)], edx
 
     ; level 4
-    mov     dword[PT_ADDR (0x1000)], PT_ADDR (0x2000) + PAGE_PDE_DIRECTORY_ATTR
+    mov     dword[PT_ADDR (0x1000)], PT_ADDR (0x3000) + PAGE_PDE_DIRECTORY_ATTR
     mov     dword[PT_ADDR (0x1004)], edx
 
-    ; level 3 (four 1GB pages for the lowest 4G)
-    mov     dword[PT_ADDR (0x2000)], (0 << 30) + PAGE_PDE_LARGEPAGE_ATTR
-    mov     dword[PT_ADDR (0x2004)], edx
-    mov     dword[PT_ADDR (0x2008)], (1 << 30) + PAGE_PDE_LARGEPAGE_ATTR
-    mov     dword[PT_ADDR (0x200c)], edx
-    mov     dword[PT_ADDR (0x2010)], (2 << 30) + PAGE_PDE_LARGEPAGE_ATTR
-    mov     dword[PT_ADDR (0x2014)], edx
-    mov     dword[PT_ADDR (0x2018)], (3 << 30) + PAGE_PDE_LARGEPAGE_ATTR
-    mov     dword[PT_ADDR (0x201c)], edx
+    ; level 3 (1x -> level 2, 3x 1GB)
+    mov     dword[PT_ADDR (0x3000)], PT_ADDR (0x2000) + PAGE_PDE_DIRECTORY_ATTR
+    mov     dword[PT_ADDR (0x3004)], edx
+    mov     dword[PT_ADDR (0x3008)], (1 << 30) + PAGE_PDE_LARGEPAGE_ATTR
+    mov     dword[PT_ADDR (0x300c)], edx
+    mov     dword[PT_ADDR (0x3010)], (2 << 30) + PAGE_PDE_LARGEPAGE_ATTR
+    mov     dword[PT_ADDR (0x3014)], edx
+    mov     dword[PT_ADDR (0x3018)], (3 << 30) + PAGE_PDE_LARGEPAGE_ATTR
+    mov     dword[PT_ADDR (0x301c)], edx
+
+    ;
+    ; level 2 (512 * 2MB entries => 1GB)
+    ;
+    mov     ecx, 0x200
+pageTableEntriesLoopLa57:
+    mov     eax, ecx
+    dec     eax
+    shl     eax, 21
+    add     eax, PAGE_PDE_LARGEPAGE_ATTR
+    mov     [ecx * 8 + PT_ADDR (0x2000 - 8)], eax
+    mov     [(ecx * 8 + PT_ADDR (0x2000 - 8)) + 4], edx
+    loop    pageTableEntriesLoopla57
 
     ; set la57 bit in cr4
     mov     eax, cr4
@@ -208,23 +231,21 @@ pageTableEntriesLoop:
 %if PG_5_LEVEL
 
 PageTablesReadyLa57:
-    ; Clear the C-bit from the GHCB page if the SEV-ES is enabled.
-    ; FIXME
-
     ; TDX will do some PostBuildPages task, such as setting
     ; byte[TDX_WORK_AREA_PGTBL_READY].
     OneTimeCall   TdxPostBuildPageTablesLa57
-    jmp SetCr3
+    jmp SevPostBuildPageTables
 
 %endif
 
 PageTablesReady:
-    ; Clear the C-bit from the GHCB page if the SEV-ES is enabled.
-    OneTimeCall   SevClearPageEncMaskForGhcbPage
-
     ; TDX will do some PostBuildPages task, such as setting
     ; byte[TDX_WORK_AREA_PGTBL_READY].
     OneTimeCall   TdxPostBuildPageTables
+
+SevPostBuildPageTables:
+    ; Clear the C-bit from the GHCB page if the SEV-ES is enabled.
+    OneTimeCall   SevClearPageEncMaskForGhcbPage
 
 SetCr3:
     ;
