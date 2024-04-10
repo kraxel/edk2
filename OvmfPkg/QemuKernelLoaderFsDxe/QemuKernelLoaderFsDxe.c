@@ -35,6 +35,7 @@ typedef enum {
   KernelBlobTypeKernel,
   KernelBlobTypeInitrd,
   KernelBlobTypeCommandLine,
+  KernelBlobTypeShim,
   KernelBlobTypeMax
 } KERNEL_BLOB_TYPE;
 
@@ -68,6 +69,10 @@ STATIC KERNEL_BLOB  mKernelBlob[KernelBlobTypeMax] = {
     {
       { QemuFwCfgItemCommandLineSize, QemuFwCfgItemCommandLineData, },
     }
+  },  {
+    L"shim",
+    { },
+    "etc/boot/shim"
   }
 };
 
