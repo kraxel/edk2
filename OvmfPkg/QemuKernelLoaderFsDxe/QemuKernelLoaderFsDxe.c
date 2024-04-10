@@ -755,6 +755,8 @@ StubFileOpen (
   UINTN            BlobType;
   STUB_FILE        *NewStubFile;
 
+  DEBUG ((DEBUG_INFO, "%a: FileName '%s'\n", __func__, FileName));
+
   //
   // We're read-only.
   //
@@ -764,9 +766,11 @@ StubFileOpen (
 
     case EFI_FILE_MODE_READ | EFI_FILE_MODE_WRITE:
     case EFI_FILE_MODE_READ | EFI_FILE_MODE_WRITE | EFI_FILE_MODE_CREATE:
+      DEBUG ((DEBUG_INFO, "%a: ERROR: write protected\n", __func__));
       return EFI_WRITE_PROTECTED;
 
     default:
+      DEBUG ((DEBUG_INFO, "%a: ERROR: invalid parameter\n", __func__));
       return EFI_INVALID_PARAMETER;
   }
 
@@ -775,6 +779,7 @@ StubFileOpen (
   //
   StubFile = STUB_FILE_FROM_FILE (This);
   if (StubFile->BlobType != KernelBlobTypeMax) {
+    DEBUG ((DEBUG_INFO, "%a: ERROR: unsupported\n", __func__));
     return EFI_UNSUPPORTED;
   }
 
@@ -788,6 +793,7 @@ StubFileOpen (
   }
 
   if (BlobType == KernelBlobTypeMax) {
+    DEBUG ((DEBUG_INFO, "%a: ERROR: not found\n", __func__));
     return EFI_NOT_FOUND;
   }
 
@@ -808,6 +814,7 @@ StubFileOpen (
     sizeof mEfiFileProtocolTemplate
     );
   *NewHandle = &NewStubFile->File;
+  DEBUG ((DEBUG_INFO, "%a: OK\n", __func__));
 
   return EFI_SUCCESS;
 }
@@ -884,6 +891,8 @@ InitrdLoadFile2 (
   )
 {
   CONST KERNEL_BLOB  *InitrdBlob = &mKernelBlob[KernelBlobTypeInitrd];
+
+  DEBUG ((DEBUG_INFO, "%a:\n", __func__));
 
   ASSERT (InitrdBlob->Size > 0);
 
