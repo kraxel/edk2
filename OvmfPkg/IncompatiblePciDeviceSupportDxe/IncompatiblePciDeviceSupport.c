@@ -178,8 +178,9 @@ CheckDevice (
   OUT VOID                                          **Configuration
   )
 {
-  UINTN  Length;
-  UINT8  *Ptr;
+  BOOLEAN  NoOptionRom = FALSE;
+  UINTN    Length;
+  UINT8    *Ptr;
 
   //
   // Unlike the general description of this protocol member suggests, there is
@@ -206,6 +207,10 @@ CheckDevice (
   // In Td guest OptionRom is not allowed.
   //
   if (CcProbe ()) {
+    NoOptionRom = TRUE;
+  }
+
+  if (NoOptionRom) {
     Length += sizeof mOptionRomConfiguration;
   }
 
@@ -227,7 +232,7 @@ CheckDevice (
   CopyMem (Ptr, &mMmio64Configuration, sizeof mMmio64Configuration);
   Length = sizeof mMmio64Configuration;
 
-  if (CcProbe ()) {
+  if (NoOptionRom) {
     CopyMem (Ptr + Length, &mOptionRomConfiguration, sizeof mOptionRomConfiguration);
     Length += sizeof mOptionRomConfiguration;
   }
