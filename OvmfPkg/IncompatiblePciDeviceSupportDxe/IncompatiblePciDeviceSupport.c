@@ -210,6 +210,15 @@ CheckDevice (
     NoOptionRom = TRUE;
   }
 
+  //
+  // OvmfPkg ships a virtio-net driver, so the pci option rom driver is not
+  // needed for these devices.
+  //
+  if (VendorId == 0x1af4 && (DeviceId == 0x1000 /* virtio 0.9 */ ||
+                             DeviceId == 0x1041 /* virtio 1.x */ )) {
+    NoOptionRom = TRUE;
+  }
+
   if (NoOptionRom) {
     Length += sizeof mOptionRomConfiguration;
   }
