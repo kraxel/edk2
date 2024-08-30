@@ -87,11 +87,14 @@ TlsCtxNew (
 {
   SSL_CTX  *TlsCtx;
   UINT16   ProtoVersion;
+  char     ErrorLine[256];
 
   ProtoVersion = (MajorVer << 8) | MinorVer;
 
   TlsCtx = SSL_CTX_new (SSLv23_client_method ());
   if (TlsCtx == NULL) {
+    ERR_error_string_n(ERR_get_error(), ErrorLine, sizeof(ErrorLine));
+    DEBUG (( DEBUG_INFO, "%a/%d: %a\n", __func__, __LINE__, ErrorLine));
     return NULL;
   }
 
