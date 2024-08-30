@@ -46,6 +46,7 @@ BaseRngLibConstructor (
   //
   Isar0          = ArmReadIdAA64Isar0Reg ();
   mRndrSupported = !!((Isar0 >> ARM_ID_AA64ISAR0_EL1_RNDR_SHIFT) & ARM_ID_AA64ISAR0_EL1_RNDR_MASK);
+  DEBUG (( DEBUG_INFO, "%a/%d: mRndrSupported=%d\n", __func__, __LINE__, mRndrSupported));
 
   return EFI_SUCCESS;
 }
