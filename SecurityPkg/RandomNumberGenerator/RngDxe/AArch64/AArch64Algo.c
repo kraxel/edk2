@@ -65,6 +65,7 @@ GetAvailableAlgorithms (
         &RngGuid,
         sizeof (RngGuid)
         );
+      DEBUG (( DEBUG_INFO, "%a/%d: safe\n", __func__, __LINE__));
       mAvailableAlgoArrayCount++;
     }
   }
@@ -76,6 +77,7 @@ GetAvailableAlgorithms (
       &gEfiRngAlgorithmRaw,
       sizeof (EFI_RNG_ALGORITHM)
       );
+    DEBUG (( DEBUG_INFO, "%a/%d: raw\n", __func__, __LINE__));
     mAvailableAlgoArrayCount++;
   }
 
@@ -86,6 +88,7 @@ GetAvailableAlgorithms (
       &gEdkiiRngAlgorithmUnSafe,
       sizeof (EFI_RNG_ALGORITHM)
       );
+    DEBUG (( DEBUG_INFO, "%a/%d: unsafe\n", __func__, __LINE__));
     mAvailableAlgoArrayCount++;
   }
 
