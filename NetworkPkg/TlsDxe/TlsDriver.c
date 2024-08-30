@@ -246,6 +246,7 @@ TlsDriverEntryPoint (
   //
   Status = TlsCreateService (ImageHandle, &TlsService);
   if (EFI_ERROR (Status)) {
+    DEBUG (( DEBUG_INFO, "%a/%d: %r\n", __func__, __LINE__, Status));
     return Status;
   }
 
@@ -263,6 +264,7 @@ TlsDriverEntryPoint (
   TlsService->TlsCtx = TlsCtxNew (TLS10_PROTOCOL_VERSION_MAJOR, TLS10_PROTOCOL_VERSION_MINOR);
   if (TlsService->TlsCtx == NULL) {
     FreePool (TlsService);
+    DEBUG (( DEBUG_INFO, "%a/%d: TlsCtxNew failed\n", __func__, __LINE__));
     return EFI_ABORTED;
   }
 
@@ -284,6 +286,7 @@ TlsDriverEntryPoint (
 ON_CLEAN_SERVICE:
   TlsCleanService (TlsService);
 
+  DEBUG (( DEBUG_INFO, "%a/%d: %r\n", __func__, __LINE__, Status));
   return Status;
 }
 
