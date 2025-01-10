@@ -1943,7 +1943,7 @@ PlatformBootManagerAfterConsole (
   PlatformRegisterFvBootOption (
     &gGrubFileGuid,
     L"Grub Bootloader",
-    LOAD_OPTION_ACTIVE,
+    LOAD_OPTION_ACTIVE | LOAD_OPTION_CATEGORY_APP,
     TRUE
     );
 
