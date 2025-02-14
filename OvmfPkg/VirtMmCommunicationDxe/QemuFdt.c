@@ -300,6 +300,18 @@ VirtMmHwInit (
 
 EFI_STATUS
 EFIAPI
+VirtMmHwPioTransfer (
+  VOID     *Buffer,
+  UINT32   BufferSize,
+  BOOLEAN  ToDevice
+  )
+{
+  /* TODO */
+  return RETURN_UNSUPPORTED;
+}
+
+EFI_STATUS
+EFIAPI
 VirtMmHwVirtMap (
   VOID
   )
