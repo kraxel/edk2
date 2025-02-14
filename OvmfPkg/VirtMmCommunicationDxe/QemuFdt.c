@@ -306,8 +306,37 @@ VirtMmHwPioTransfer (
   BOOLEAN  ToDevice
   )
 {
-  /* TODO */
-  return RETURN_UNSUPPORTED;
+  UINT32      *Ptr  = Buffer;
+  UINT32      Bytes = 0;
+  UINT32      Crc1;
+  UINT32      Crc2;
+  EFI_STATUS  Status;
+
+  Status = VirtMmHwCommand (UEFI_VARS_CMD_PIO_ZERO_OFFSET);
+  if (EFI_ERROR (Status)) {
+    DEBUG ((DEBUG_ERROR, "%a: zero offset failed: %d\n", __func__, Status));
+    return Status;
+  }
+
+  while (Bytes < BufferSize) {
+    if (ToDevice) {
+      MmioWrite32 (UEFI_VARS_IO_BASE + UEFI_VARS_REG_PIO_BUFFER_TRANSFER, *Ptr);
+    } else {
+      *Ptr = MmioRead32 (UEFI_VARS_IO_BASE + UEFI_VARS_REG_PIO_BUFFER_TRANSFER);
+    }
+
+    Bytes += sizeof (*Ptr);
+    Ptr++;
+  }
+
+  Crc1 = CalculateCrc32c (Buffer, Bytes, 0);
+  Crc2 = MmioRead32 (UEFI_VARS_IO_BASE + UEFI_VARS_REG_PIO_BUFFER_CRC32C);
+  if (Crc1 != Crc2) {
+    DEBUG ((DEBUG_ERROR, "%a: crc32c mismatch (0x%08x,0x%08x)\n", __func__, Crc1, Crc2));
+    return RETURN_DEVICE_ERROR;
+  }
+
+  return RETURN_SUCCESS;
 }
 
 EFI_STATUS
