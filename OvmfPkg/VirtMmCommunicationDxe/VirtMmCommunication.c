@@ -20,6 +20,7 @@
 
 VOID                  *mCommunicateBuffer;
 EFI_PHYSICAL_ADDRESS  mCommunicateBufferPhys;
+BOOLEAN               mUsePioTransfer = TRUE;
 
 // Notification event when virtual address map is set.
 STATIC EFI_EVENT  mSetVirtualAddressMapEvent;
@@ -141,16 +142,35 @@ VirtMmCommunication2Communicate (
     return Status;
   }
 
-  // Copy Communication Payload
-  CopyMem (mCommunicateBuffer, CommBufferVirtual, BufferSize);
+  if (mUsePioTransfer) {
+    Status = VirtMmHwPioTransfer (CommBufferVirtual, BufferSize, TRUE);
+    if (EFI_ERROR (Status)) {
+      DEBUG ((DEBUG_WARN, "%a: pio write error: %r\n", __func__, Status));
+      return Status;
+    }
 
-  Status = VirtMmHwComm ();
-  if (EFI_ERROR (Status)) {
-    DEBUG ((DEBUG_WARN, "%a: comm error: %r\n", __func__, Status));
-    return Status;
+    Status = VirtMmHwComm ();
+    if (EFI_ERROR (Status)) {
+      DEBUG ((DEBUG_WARN, "%a: pio comm error: %r\n", __func__, Status));
+      return Status;
+    }
+
+    Status = VirtMmHwPioTransfer (CommBufferVirtual, BufferSize, FALSE);
+    if (EFI_ERROR (Status)) {
+      DEBUG ((DEBUG_WARN, "%a: pio read error: %r\n", __func__, Status));
+      return Status;
+    }
+  } else {
+    CopyMem (mCommunicateBuffer, CommBufferVirtual, BufferSize);
+
+    Status = VirtMmHwComm ();
+    if (EFI_ERROR (Status)) {
+      DEBUG ((DEBUG_WARN, "%a: dma comm error: %r\n", __func__, Status));
+      return Status;
+    }
+
+    CopyMem (CommBufferVirtual, mCommunicateBuffer, BufferSize);
   }
-
-  CopyMem (CommBufferVirtual, mCommunicateBuffer, BufferSize);
 
   DEBUG ((DEBUG_VERBOSE, "%a: success (%d)\n", __func__, BufferSize));
   return EFI_SUCCESS;
