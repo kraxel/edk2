@@ -291,8 +291,8 @@ VirtMmHwInit (
 
   AddrLo = (UINT32)mCommunicateBufferPhys;
   AddrHi = (UINT32)RShiftU64 (mCommunicateBufferPhys, 32);
-  MmioWrite32 (mUefiVarsAddr + UEFI_VARS_REG_BUFFER_ADDR_LO, AddrLo);
-  MmioWrite32 (mUefiVarsAddr + UEFI_VARS_REG_BUFFER_ADDR_HI, AddrHi);
+  MmioWrite32 (mUefiVarsAddr + UEFI_VARS_REG_DMA_BUFFER_ADDR_LO, AddrLo);
+  MmioWrite32 (mUefiVarsAddr + UEFI_VARS_REG_DMA_BUFFER_ADDR_HI, AddrHi);
   MmioWrite32 (mUefiVarsAddr + UEFI_VARS_REG_BUFFER_SIZE, MAX_BUFFER_SIZE);
 
   return RETURN_SUCCESS;
@@ -321,7 +321,7 @@ VirtMmHwComm (
 {
   EFI_STATUS  Status;
 
-  Status = VirtMmHwCommand (UEFI_VARS_CMD_MM);
+  Status = VirtMmHwCommand (UEFI_VARS_CMD_DMA_MM);
   DEBUG ((DEBUG_VERBOSE, "%a: Status: %r\n", __func__, Status));
 
   return Status;
