@@ -13,6 +13,7 @@
 
 extern VOID                  *mCommunicateBuffer;
 extern EFI_PHYSICAL_ADDRESS  mCommunicateBufferPhys;
+extern BOOLEAN               mUsePioTransfer;
 
 /* arch specific hooks */
 
@@ -32,6 +33,14 @@ EFI_STATUS
 EFIAPI
 VirtMmHwVirtMap (
   VOID
+  );
+
+EFI_STATUS
+EFIAPI
+VirtMmHwPioTransfer (
+  VOID     *Buffer,
+  UINT32   BufferSize,
+  BOOLEAN  ToDevice
   );
 
 #endif /* _VIRT_MM_COMM_DXE_H_ */
