@@ -1055,6 +1055,7 @@ PlatformInit (
   ASSERT_EFI_ERROR (Status);
 
   MemDebugLogInstallTable ();
+  PageFaultInit ();
 
   return EFI_SUCCESS;
 

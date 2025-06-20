@@ -51,3 +51,8 @@ PlatformConfigLoad (
 
 extern CHAR16  mVariableName[];
 extern CHAR16  mHiiFormName[];
+
+VOID EFIAPI
+PageFaultInit (
+  VOID
+  );
