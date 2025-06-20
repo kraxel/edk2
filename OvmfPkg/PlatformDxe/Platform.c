@@ -1030,6 +1030,8 @@ PlatformInit (
   Status = gBS->SignalEvent (mGopEvent);
   ASSERT_EFI_ERROR (Status);
 
+  PageFaultInit ();
+
   return EFI_SUCCESS;
 
 CloseGopEvent:
