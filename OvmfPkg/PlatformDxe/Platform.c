@@ -17,9 +17,11 @@
 #include <Library/PrintLib.h>
 #include <Library/UefiBootServicesTableLib.h>
 #include <Library/UefiHiiServicesLib.h>
+#include <Protocol/Cpu.h>
 #include <Protocol/DevicePath.h>
 #include <Protocol/GraphicsOutput.h>
 #include <Protocol/HiiConfigAccess.h>
+#include <Protocol/MemoryAttribute.h>
 #include <Guid/MdeModuleHii.h>
 #include <Guid/OvmfPlatformConfig.h>
 
@@ -1029,6 +1031,8 @@ PlatformInit (
   //
   Status = gBS->SignalEvent (mGopEvent);
   ASSERT_EFI_ERROR (Status);
+
+  PageFaultInit ();
 
   return EFI_SUCCESS;
 

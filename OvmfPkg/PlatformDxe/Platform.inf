@@ -18,6 +18,7 @@
   UNLOAD_IMAGE                   = PlatformUnload
 
 [Sources]
+  PageFault.c
   Platform.c
   Platform.h
   Platform.uni
@@ -33,6 +34,7 @@
 [LibraryClasses]
   BaseLib
   BaseMemoryLib
+  CpuLib
   DebugLib
   DevicePathLib
   HiiLib
@@ -55,6 +57,7 @@
   gEfiDevicePathProtocolGuid      ## PRODUCES
   gEfiGraphicsOutputProtocolGuid  ## CONSUMES
   gEfiHiiConfigAccessProtocolGuid ## PRODUCES
+  gEfiCpuArchProtocolGuid
 
 [Guids]
   gEfiIfrTianoGuid
@@ -64,4 +67,5 @@
   gEfiHiiConfigRoutingProtocolGuid  AND
   gEfiHiiDatabaseProtocolGuid       AND
   gEfiVariableArchProtocolGuid      AND
-  gEfiVariableWriteArchProtocolGuid
+  gEfiVariableWriteArchProtocolGuid AND
+  gEfiCpuArchProtocolGuid
