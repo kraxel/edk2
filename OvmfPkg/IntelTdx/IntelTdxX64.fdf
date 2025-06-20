@@ -244,6 +244,7 @@ INF  FatPkg/EnhancedFatDxe/Fat.inf
 INF OvmfPkg/TdxDxe/TdxDxe.inf
 
 INF  OvmfPkg/IoMmuDxe/IoMmuDxe.inf
+INF  OvmfPkg/PlatformDxe/Platform.inf
 
 #
 # Variable driver stack (non-SMM)
@@ -319,7 +320,6 @@ INF  OvmfPkg/QemuVideoDxe/QemuVideoDxe.inf
 
 INF  OvmfPkg/QemuRamfbDxe/QemuRamfbDxe.inf
 INF  OvmfPkg/VirtioGpuDxe/VirtioGpu.inf
-INF  OvmfPkg/PlatformDxe/Platform.inf
 
 !include OvmfPkg/Include/Fdf/ShellDxe.fdf.inc
 !include OvmfPkg/Include/Fdf/OvmfRngDxe.fdf.inc
