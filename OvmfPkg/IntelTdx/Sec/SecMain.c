@@ -106,10 +106,12 @@ SecCoreStartupWithStack (
     // and should be measured here.
     //
     if (EFI_ERROR (TdxHelperMeasureTdHob ())) {
+      DEBUG ((DEBUG_INFO, "%a: TdxHelperMeasureTdHob failed\n", __func__));
       CpuDeadLoop ();
     }
 
     if (EFI_ERROR (TdxHelperMeasureCfvImage ())) {
+      DEBUG ((DEBUG_INFO, "%a: TdxHelperMeasureCfvImage failed\n", __func__));
       CpuDeadLoop ();
     }
 
@@ -119,6 +121,7 @@ SecCoreStartupWithStack (
     // memory will trigger tripple fault.
     //
     if (TdxHelperProcessTdHob () != EFI_SUCCESS) {
+      DEBUG ((DEBUG_INFO, "%a: TdxHelperProcessTdHob failed\n", __func__));
       CpuDeadLoop ();
     }
   }
