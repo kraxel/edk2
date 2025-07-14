@@ -20,10 +20,12 @@ Module Name:
 #include <IndustryStandard/Xen/arch-x86/hvm/start_info.h>
 #include <PiPei.h>
 #include <Register/Intel/SmramSaveStateMap.h>
+#include <Register/Amd/Svsm.h>
 
 //
 // The Library classes this module consumes
 //
+#include <Library/AmdSvsmLib.h>
 #include <Library/BaseLib.h>
 #include <Library/BaseMemoryLib.h>
 #include <Library/CcProbeLib.h>
@@ -342,6 +344,67 @@ PlatformScanE820Pvh (
   return EFI_SUCCESS;
 }
 
+STATIC
+BOOLEAN
+SvsmMemmapPresent (
+  )
+{
+  UINT32  Min, Max;
+
+  if (!AmdSvsmIsSvsmPresent ()) {
+    DEBUG ((DEBUG_VERBOSE, "%a: no SVSM present\n", __func__));
+    return FALSE;
+  }
+
+  if (!AmdSvsmQueryProtocol (SVSM_PROTOCOL_MEMMAP, 1, &Min, &Max)) {
+    DEBUG ((DEBUG_VERBOSE, "%a: SVSM memmap protocol not supported\n", __func__));
+    return FALSE;
+  }
+
+  DEBUG ((
+    DEBUG_INFO,
+    "%a: SVSM memmap protocol available (min %d, max %d)\n",
+    __func__,
+    Min,
+    Max
+    ));
+  return TRUE;
+}
+
+STATIC
+EFI_STATUS
+SvsmMemmapScanE820 (
+  IN      E820_SCAN_CALLBACK     Callback,
+  IN OUT  EFI_HOB_PLATFORM_INFO  *PlatformInfoHob
+  )
+{
+  EFI_E820_ENTRY64  E820Entry;
+  UINT64            Count;
+  UINT64            Index;
+  UINT64            Type;
+  UINT64            Start;
+  UINT64            Length;
+
+  if (!AmdSvsmMemmapNumEntries (&Count)) {
+    return EFI_DEVICE_ERROR;
+  }
+
+  for (Index = 0; Index < Count; Index++) {
+    if (!AmdSvsmMemmapGetEntry (Index, &Type, &Start, &Length)) {
+      return EFI_DEVICE_ERROR;
+    }
+
+    DEBUG ((DEBUG_VERBOSE, "%a: type %lu: 0x%lx +0x%lx\n", __func__, Type, Start, Length));
+
+    E820Entry.BaseAddr = Start;
+    E820Entry.Length   = Length;
+    E820Entry.Type     = Type;
+    Callback (&E820Entry, PlatformInfoHob);
+  }
+
+  return EFI_SUCCESS;
+}
+
 /**
   Iterate over the entries in QEMU's fw_cfg E820 RAM map, call the
   passed callback for each entry.
@@ -379,6 +442,10 @@ PlatformScanE820 (
 
   if (TdIsEnabled ()) {
     return PlatformScanE820Tdx (Callback, PlatformInfoHob);
+  }
+
+  if (SvsmMemmapPresent ()) {
+    return SvsmMemmapScanE820 (Callback, PlatformInfoHob);
   }
 
   Status = QemuFwCfgFindFile ("etc/e820", &FwCfgItem, &FwCfgSize);

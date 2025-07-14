@@ -42,6 +42,7 @@
   UefiCpuPkg/UefiCpuPkg.dec
 
 [LibraryClasses]
+  AmdSvsmLib
   BaseLib
   DebugLib
   IoLib
