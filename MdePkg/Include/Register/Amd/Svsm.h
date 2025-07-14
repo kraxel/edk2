@@ -103,6 +103,7 @@ typedef union {
 #define SVSM_PROTOCOL_CORE         0
 #define SVSM_PROTOCOL_ATTESTATION  1
 #define SVSM_PROTOCOL_VTPM         2
+#define SVSM_PROTOCOL_MEMMAP       42
 /// @}
 
 /// SVSM Core Protocol calls
@@ -121,6 +122,12 @@ typedef union {
 /// @{
 #define SVSM_VTPM_QUERY  0
 #define SVSM_VTPM_CMD    1
+/// @}
+
+/// SVSM Memmap Protocol calls
+/// @{
+#define SVSM_MEMMAP_NUM_ENTRIES  1
+#define SVSM_MEMMAP_GET_ENTRY    2
 /// @}
 
 #endif
