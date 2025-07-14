@@ -636,3 +636,75 @@ AmdSvsmQueryProtocol (
 
   return TRUE;
 }
+
+BOOLEAN
+EFIAPI
+AmdSvsmMemmapNumEntries (
+  OUT UINT64  *NumEntries
+  )
+{
+  SVSM_CALL_DATA  SvsmCallData;
+  SVSM_FUNCTION   Function;
+  UINTN           Ret;
+
+  Function.Id.Protocol = SVSM_PROTOCOL_MEMMAP;
+  Function.Id.CallId   = SVSM_MEMMAP_NUM_ENTRIES;
+
+  SvsmCallData.Caa   = (SVSM_CAA *)AmdSvsmSnpGetCaa ();
+  SvsmCallData.RaxIn = Function.Uint64;
+
+  Ret = SvsmMsrProtocol (&SvsmCallData);
+  if (Ret != 0) {
+    return FALSE;
+  }
+
+  if (SvsmCallData.RcxOut == 0) {
+    return FALSE;
+  }
+
+  if (NumEntries) {
+    *NumEntries = SvsmCallData.RcxOut;
+  }
+
+  return TRUE;
+}
+
+BOOLEAN
+EFIAPI
+AmdSvsmMemmapGetEntry (
+  IN  UINT64  Index,
+  OUT UINT64  *Type,
+  OUT UINT64  *Start,
+  OUT UINT64  *Length
+  )
+{
+  SVSM_CALL_DATA  SvsmCallData;
+  SVSM_FUNCTION   Function;
+  UINTN           Ret;
+
+  Function.Id.Protocol = SVSM_PROTOCOL_MEMMAP;
+  Function.Id.CallId   = SVSM_MEMMAP_GET_ENTRY;
+
+  SvsmCallData.Caa   = (SVSM_CAA *)AmdSvsmSnpGetCaa ();
+  SvsmCallData.RaxIn = Function.Uint64;
+  SvsmCallData.RcxIn = Index;
+
+  Ret = SvsmMsrProtocol (&SvsmCallData);
+  if (Ret != 0) {
+    return FALSE;
+  }
+
+  if (Type) {
+    *Type = SvsmCallData.RdxOut;
+  }
+
+  if (Start) {
+    *Start = SvsmCallData.R8Out;
+  }
+
+  if (Length) {
+    *Length = SvsmCallData.R9Out;
+  }
+
+  return TRUE;
+}
