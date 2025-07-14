@@ -148,4 +148,19 @@ AmdSvsmQueryProtocol (
   OUT UINT32  *ProtocolMax
   );
 
+BOOLEAN
+EFIAPI
+AmdSvsmMemmapNumEntries (
+  OUT UINT64  *NumEntries
+  );
+
+BOOLEAN
+EFIAPI
+AmdSvsmMemmapGetEntry (
+  IN  UINT64  Index,
+  OUT UINT64  *Type,
+  OUT UINT64  *Start,
+  OUT UINT64  *Length
+  );
+
 #endif

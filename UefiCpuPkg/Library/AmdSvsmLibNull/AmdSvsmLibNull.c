@@ -165,3 +165,24 @@ AmdSvsmQueryProtocol (
 {
   return FALSE;
 }
+
+BOOLEAN
+EFIAPI
+AmdSvsmMemmapNumEntries (
+  OUT UINT64  *NumEntries
+  )
+{
+  return FALSE;
+}
+
+BOOLEAN
+EFIAPI
+AmdSvsmMemmapGetEntry (
+  IN  UINT64  Index,
+  OUT UINT64  *Type,
+  OUT UINT64  *Start,
+  OUT UINT64  *Length
+  )
+{
+  return FALSE;
+}
