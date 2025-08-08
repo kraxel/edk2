@@ -14,6 +14,7 @@ ALIGN 16
 %define IGVM_VHT_PARAMETER_AREA                          0x301
 %define IGVM_VHT_MEMORY_MAP                              0x30C
 
+; keep in sync with OvmfPkg/Library/PlatformInitLib/Igvm.c
 %define MEMORY_MAP_OFFSET                                    0
 %define MEMORY_MAP_ENTRIES                                   8
 %define MEMORY_MAP_SIZE              (MEMORY_MAP_ENTRIES * 24)
