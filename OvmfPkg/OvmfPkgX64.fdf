@@ -100,7 +100,10 @@ gUefiOvmfPkgTokenSpaceGuid.PcdOvmfSecSvsmCaaBase|gUefiOvmfPkgTokenSpaceGuid.PcdO
 0x010000|0x001000
 gUefiOvmfPkgTokenSpaceGuid.PcdOvmfSecApicPageTableBase|gUefiOvmfPkgTokenSpaceGuid.PcdOvmfSecApicPageTableSize
 
-0x011000|0x00F000
+0x011000|0x001000
+gUefiOvmfPkgTokenSpaceGuid.PcdOvmfIgvmParamBase|gUefiOvmfPkgTokenSpaceGuid.PcdOvmfIgvmParamSize
+
+0x012000|0x00E000
 gUefiOvmfPkgTokenSpaceGuid.PcdOvmfSecPeiTempRamBase|gUefiOvmfPkgTokenSpaceGuid.PcdOvmfSecPeiTempRamSize
 
 0x020000|0x0D0000
