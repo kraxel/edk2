@@ -66,4 +66,6 @@
   gUefiOvmfPkgTokenSpaceGuid.PcdOvmfSecSvsmCaaSize
   gUefiOvmfPkgTokenSpaceGuid.PcdOvmfSnpSecretsBase
   gUefiOvmfPkgTokenSpaceGuid.PcdOvmfSnpSecretsSize
+  gUefiOvmfPkgTokenSpaceGuid.PcdOvmfIgvmParamBase
+  gUefiOvmfPkgTokenSpaceGuid.PcdOvmfIgvmParamSize
   gEfiMdeModulePkgTokenSpaceGuid.PcdUse5LevelPageTable
