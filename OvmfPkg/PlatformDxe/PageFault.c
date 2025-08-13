@@ -116,6 +116,16 @@ PageFaultGetPte (
 
 /*
  * Fix page tables, clear NX, set RW, using 1G pages, lowest 512G.
+ *
+ * Background:
+ *
+ * Sometimes NX/RW faults happen with the kernel still running on the EFI page
+ * tables, but after the kernel installed its own page fault handler.
+ *
+ * Sometimes the kernel handler fails to deal with the faults -> BOOM.
+ *
+ * So lets tweak the EFI page table to allow everything if our heuristics
+ * indicate this is a good idea.
  */
 VOID
 EFIAPI
@@ -277,6 +287,7 @@ PageFaultExitBoot (
   DEBUG ((DEBUG_INFO, "%a: fixups: %d NX, %d RW\n", __func__, mFixupNX, mFixupRW));
 
   if (mFixupNX || mFixupRW) {
+    /* we had to fixup NX or RW faults -> broken behavior -> report it */
     AsciiPrint (
       "%a: Page fault fixups needed (NX: %d, RW: %d).\n"
       "%a: The guest OS boot chain is not NX clean.\n",
@@ -289,6 +300,7 @@ PageFaultExitBoot (
   }
 
   if (mFixupNX) {
+    /* we had to fixup NX faults -> apply global fixup as precaution + report it */
     AsciiPrint (
       "%a: Applying global page table fixup (saw NX faults).\n",
       __func__
@@ -296,6 +308,7 @@ PageFaultExitBoot (
     PageFaultFixMap ("nx-fault");
 
   } else if (HaveOldShim) {
+    /* we detected shim older than v16 -> apply global fixup as precaution + report it */
     AsciiPrint (
       "%a: Applying global page table fixup (shim is older than v16).\n",
       __func__
