@@ -120,7 +120,7 @@ PageFaultGetPte (
 VOID
 EFIAPI
 PageFaultFixMap (
-  VOID
+  CHAR8 *Reason
   )
 {
   UINT64  Idx;
@@ -132,7 +132,7 @@ PageFaultFixMap (
     return;
   }
 
-  DEBUG ((DEBUG_INFO, "%a: global RW+NX fixup\n", __func__));
+  DEBUG ((DEBUG_INFO, "%a: global RW+NX fixup (%a)\n", __func__, Reason));
 
   Pd3 = PageFaultGetPd3 (0);
   DEBUG ((DEBUG_VERBOSE, "%a:    pd3 at 0x%lx [global RW+NX fixup]\n", __func__, Pd3));
@@ -251,6 +251,29 @@ PageFaultExitBoot (
   IN  VOID       *Context
   )
 {
+  STATIC EFI_GUID  SHIM_LOCK_GUID = {
+    0x605dab50, 0xe046, 0x4300, { 0xab, 0xb6, 0x3d, 0xd8, 0x10, 0xdd, 0x8b, 0x23 }
+  };
+  STATIC EFI_GUID  SHIM_IMAGE_LOADER_GUID = {
+    0x1f492041, 0xfadb, 0x4e59, { 0x9e, 0x57, 0x7c, 0xaf, 0xe7, 0x3a, 0x55, 0xab }
+  };
+  VOID             *ShimLock   = NULL;
+  VOID             *ShimLoader = NULL;
+  BOOLEAN          MessageWait = FALSE;
+  BOOLEAN          HaveOldShim;
+
+  gBS->LocateProtocol (&SHIM_LOCK_GUID, NULL, &ShimLock);
+  gBS->LocateProtocol (&SHIM_IMAGE_LOADER_GUID, NULL, &ShimLoader);
+  HaveOldShim = (ShimLock != NULL) && (ShimLoader == NULL);
+
+  DEBUG ((
+      DEBUG_INFO,
+      "%a: shim protocols: lock=%a, loader=%a -> old-shim=%a\n",
+      __func__,
+      (ShimLock != NULL) ? "yes" : "no",
+      (ShimLoader != NULL) ? "yes" : "no",
+      (HaveOldShim) ? "yes" : "no"
+      ));
   DEBUG ((DEBUG_INFO, "%a: fixups: %d NX, %d RW\n", __func__, mFixupNX, mFixupRW));
 
   if (mFixupNX || mFixupRW) {
@@ -262,15 +285,25 @@ PageFaultExitBoot (
       mFixupRW,
       __func__
       );
+    MessageWait = TRUE;
+  }
 
-    if (mFixupNX) {
-      AsciiPrint (
-        "%a: Applying global page table fixup.\n",
-        __func__
-        );
-      PageFaultFixMap ();
-    }
+  if (mFixupNX) {
+    AsciiPrint (
+      "%a: Applying global page table fixup (saw NX faults).\n",
+      __func__
+      );
+    PageFaultFixMap ("nx-fault");
 
+  } else if (HaveOldShim) {
+    AsciiPrint (
+      "%a: Applying global page table fixup (shim is older than v16).\n",
+      __func__
+      );
+    PageFaultFixMap ("old-shim");
+  }
+
+  if (MessageWait) {
     gBS->Stall (3000000);
   }
 }
