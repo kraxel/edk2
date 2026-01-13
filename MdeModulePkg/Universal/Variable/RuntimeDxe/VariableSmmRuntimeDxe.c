@@ -729,6 +729,13 @@ FindVariableInSmm (
   }
 
   PayloadSize = OFFSET_OF (SMM_VARIABLE_COMMUNICATE_ACCESS_VARIABLE, Name) + VariableNameSize + TempDataSize;
+  DEBUG ((DEBUG_WARN, "%a: v2: %s  |  %ld + %ld + %ld [%ld] -> %ld\n", __func__,
+          VariableName,
+          OFFSET_OF (SMM_VARIABLE_COMMUNICATE_ACCESS_VARIABLE, Name),
+          VariableNameSize,
+          TempDataSize,
+          *DataSize,
+          PayloadSize));
 
   Status = InitCommunicateBuffer ((VOID **)&SmmVariableHeader, PayloadSize, SMM_VARIABLE_FUNCTION_GET_VARIABLE);
   if (EFI_ERROR (Status)) {
