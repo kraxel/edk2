@@ -211,7 +211,8 @@ InitCommunicateBuffer (
 **/
 EFI_STATUS
 SendCommunicateBuffer (
-  IN      UINTN  DataSize
+  IN      UINTN  DataSize,
+  CONST   CHAR8* Caller
   )
 {
   EFI_STATUS                       Status;
@@ -234,6 +235,7 @@ SendCommunicateBuffer (
     Status = SmmVariableFunctionHeader->ReturnStatus;
   } else {
     CommSize = DataSize + SMM_COMMUNICATE_HEADER_SIZE + SMM_VARIABLE_COMMUNICATE_HEADER_SIZE;
+    DEBUG ((DEBUG_WARN, "%a/%a: v2: %ld -> %ld\n", __func__, Caller, DataSize, CommSize));
     Status   = mMmCommunication2->Communicate (
                                     mMmCommunication2,
                                     mVariableBufferPhysical,
@@ -314,7 +316,7 @@ VariableLockRequestToLock (
   //
   // Send data to SMM.
   //
-  Status = SendCommunicateBuffer (PayloadSize);
+  Status = SendCommunicateBuffer (PayloadSize, __func__);
 
 Done:
   ReleaseLockOnlyAtBootTime (&mVariableServicesLock);
@@ -416,7 +418,7 @@ VarCheckVariablePropertySet (
   //
   // Send data to SMM.
   //
-  Status = SendCommunicateBuffer (PayloadSize);
+  Status = SendCommunicateBuffer (PayloadSize, __func__);
 
 Done:
   ReleaseLockOnlyAtBootTime (&mVariableServicesLock);
@@ -487,7 +489,7 @@ VarCheckVariablePropertyGet (
   //
   // Send data to SMM.
   //
-  Status = SendCommunicateBuffer (PayloadSize);
+  Status = SendCommunicateBuffer (PayloadSize, __func__);
   if (Status == EFI_SUCCESS) {
     CopyMem (VariableProperty, &CommVariableProperty->VariableProperty, sizeof (*VariableProperty));
   }
@@ -515,7 +517,7 @@ SyncRuntimeCache (
   //
   // Send data to SMM.
   //
-  SendCommunicateBuffer (0);
+  SendCommunicateBuffer (0, __func__);
 }
 
 /**
@@ -749,7 +751,7 @@ FindVariableInSmm (
   //
   // Send data to SMM.
   //
-  Status = SendCommunicateBuffer (PayloadSize);
+  Status = SendCommunicateBuffer (PayloadSize, __func__);
 
   //
   // Get data from SMM.
@@ -1018,7 +1020,7 @@ GetNextVariableNameInSmm (
   //
   // Send data to SMM
   //
-  Status = SendCommunicateBuffer (PayloadSize);
+  Status = SendCommunicateBuffer (PayloadSize, __func__);
 
   //
   // Get data from SMM.
@@ -1202,7 +1204,7 @@ RuntimeServiceSetVariable (
   //
   // Send data to SMM.
   //
-  Status = SendCommunicateBuffer (PayloadSize);
+  Status = SendCommunicateBuffer (PayloadSize, __func__);
 
 Done:
   ReleaseLockOnlyAtBootTime (&mVariableServicesLock);
@@ -1274,7 +1276,7 @@ RuntimeServiceQueryVariableInfo (
   //
   // Send data to SMM.
   //
-  Status = SendCommunicateBuffer (PayloadSize);
+  Status = SendCommunicateBuffer (PayloadSize, __func__);
   if (EFI_ERROR (Status)) {
     goto Done;
   }
@@ -1316,7 +1318,7 @@ OnExitBootServices (
   //
   // Send data to SMM.
   //
-  SendCommunicateBuffer (0);
+  SendCommunicateBuffer (0, __func__);
 }
 
 /**
@@ -1344,7 +1346,7 @@ OnReadyToBoot (
   //
   // Send data to SMM.
   //
-  SendCommunicateBuffer (0);
+  SendCommunicateBuffer (0, __func__);
 
   //
   // Install the system configuration table for variable info data captured
