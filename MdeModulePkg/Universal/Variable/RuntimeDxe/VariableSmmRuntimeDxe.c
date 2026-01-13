@@ -1450,6 +1450,7 @@ GetVariablePayloadSize (
     //
     Status = mMmCommunication3->Communicate (mMmCommunication3, CommBuffer, CommBuffer);
     ASSERT_EFI_ERROR (Status);
+    DEBUG ((DEBUG_WARN, "%a: v3: %ld\n", __func__, SmmGetPayloadSize->VariablePayloadSize));
   } else {
     CommSize   = SMM_COMMUNICATE_HEADER_SIZE + SMM_VARIABLE_COMMUNICATE_HEADER_SIZE + sizeof (SMM_VARIABLE_COMMUNICATE_GET_PAYLOAD_SIZE);
     CommBuffer = AllocateZeroPool (CommSize);
@@ -1471,6 +1472,7 @@ GetVariablePayloadSize (
     //
     Status = mMmCommunication2->Communicate (mMmCommunication2, CommBuffer, CommBuffer, &CommSize);
     ASSERT_EFI_ERROR (Status);
+    DEBUG ((DEBUG_WARN, "%a: v2: %ld\n", __func__, SmmGetPayloadSize->VariablePayloadSize));
   }
 
   Status = SmmVariableFunctionHeader->ReturnStatus;
