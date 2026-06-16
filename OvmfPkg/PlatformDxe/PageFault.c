@@ -31,7 +31,8 @@ STATIC UINTN                  mFixupRW;
 UINT64 *
 EFIAPI
 PageFaultGetPd3 (
-  UINT64  Page
+  UINT64  Page,
+  UINT64  *Msk
   )
 {
   UINT64    Idx;
@@ -44,25 +45,27 @@ PageFaultGetPd3 (
   DEBUG ((DEBUG_VERBOSE, "%a: cr3 0x%lx\n", __func__, Pde));
 
   if (Cr4.Bits.LA57) {
+    *Msk = 0x1fffffffffff000;
     Idx = Page >> (12 + 4 * 9) & 0x1ff;
-    Pde = *((UINT64 *)(Pde & ~0xfff) + Idx);
+    Pde = *((UINT64 *)(Pde & *Msk) + Idx);
     DEBUG ((DEBUG_VERBOSE, "%a:  pd5 0x%lx\n", __func__, Pde));
     if (!(Pde & 1)) {
       return NULL; // not present
     }
   } else {
+    *Msk = 0xfffffffff000;
     DEBUG ((DEBUG_VERBOSE, "%a:  no pd5\n", __func__));
   }
 
   Idx = Page >> (12 + 3 * 9) & 0x1ff;
-  Pde = *((UINT64 *)(Pde & ~0xfff) + Idx);
+  Pde = *((UINT64 *)(Pde & *Msk) + Idx);
   DEBUG ((DEBUG_VERBOSE, "%a:   pd4 0x%lx\n", __func__, Pde));
   if (!(Pde & 1)) {
     return NULL; // not present
   }
 
   Idx = Page >> (12 + 2 * 9) & 0x1ff;
-  Pd3 = (UINT64 *)(Pde & ~0xfff) + Idx;
+  Pd3 = (UINT64 *)(Pde & *Msk) + Idx;
   return Pd3;
 }
 
@@ -76,13 +79,14 @@ PageFaultGetPte (
   UINT64  Page
   )
 {
+  UINT64  Msk;
   UINT64  Idx;
   UINT64  Pde;
   UINT64  *Pd3;
   UINT64  *Pd2;
   UINT64  *Pte;
 
-  Pd3 = PageFaultGetPd3 (Page);
+  Pd3 = PageFaultGetPd3 (Page, &Msk);
   Pde = *Pd3;
   DEBUG ((DEBUG_VERBOSE, "%a:    pd3 0x%lx (at %p)\n", __func__, Pde, Pd3));
   if (!(Pde & 1)) {
@@ -95,7 +99,7 @@ PageFaultGetPte (
   }
 
   Idx = Page >> (12 + 1 * 9) & 0x1ff;
-  Pd2 = (UINT64 *)(Pde & ~0xfff) + Idx;
+  Pd2 = (UINT64 *)(Pde & Msk) + Idx;
   Pde = *Pd2;
   DEBUG ((DEBUG_VERBOSE, "%a:     pd2 0x%lx (at %p)\n", __func__, Pde, Pd2));
   if (!(Pde & 1)) {
@@ -108,7 +112,7 @@ PageFaultGetPte (
   }
 
   Idx = Page >> (12 + 0 * 9) & 0x1ff;
-  Pte = (UINT64 *)(Pde & ~0xfff) + Idx;
+  Pte = (UINT64 *)(Pde & Msk) + Idx;
   DEBUG ((DEBUG_VERBOSE, "%a:      pte 0x%lx (at %p)\n", __func__, *Pte, Pte));
 
   return Pte;
@@ -133,12 +137,13 @@ PageFaultFixMap (
   CHAR8  *Reason
   )
 {
+  UINT64  Msk;
   UINT64  Idx;
   UINT64  *Pd3;
 
   DEBUG ((DEBUG_INFO, "%a: global RW+NX fixup (%a)\n", __func__, Reason));
 
-  Pd3 = PageFaultGetPd3 (0);
+  Pd3 = PageFaultGetPd3 (0, &Msk);
   DEBUG ((DEBUG_VERBOSE, "%a:    pd3 at 0x%lx [global RW+NX fixup]\n", __func__, Pd3));
 
   for (Idx = 0; Idx < 512; Idx++) {
