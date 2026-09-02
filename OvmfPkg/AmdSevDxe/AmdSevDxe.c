@@ -85,6 +85,9 @@ AmdSevMemoryAccept (
   ASSERT (IS_ALIGNED (Size, SIZE_4KB));
   ASSERT (Size != 0);
 
+  DEBUG((DEBUG_INFO, "%a: addr=0x%lx size=0x%lx\n", __func__,
+         StartAddress, Size));
+
   MemEncryptSevSnpPreValidateSystemRam (
     StartAddress,
     EFI_SIZE_TO_PAGES (Size)
