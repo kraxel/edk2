@@ -224,6 +224,8 @@ AmdSevDxeEntryPoint (
       CONST EFI_GCD_MEMORY_SPACE_DESCRIPTOR  *Desc;
 
       Desc = &AllDescMap[Index];
+      DEBUG((DEBUG_INFO, "%a: type=%d addr=0x%lx length=0x%lx\n", __func__,
+             Desc->GcdMemoryType, Desc->BaseAddress, Desc->Length));
       if ((Desc->GcdMemoryType == EfiGcdMemoryTypeMemoryMappedIo) ||
           (Desc->GcdMemoryType == EfiGcdMemoryTypeNonExistent))
       {

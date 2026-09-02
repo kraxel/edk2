@@ -42,6 +42,7 @@ MemEncryptSevClearPageEncMask (
   IN UINTN             NumPages
   )
 {
+  DEBUG((DEBUG_INFO, "%a: addr=0x%lx pages=0x%lx\n", __func__, BaseAddress, NumPages));
   return InternalMemEncryptSevSetMemoryDecrypted (
            Cr3BaseAddress,
            BaseAddress,
@@ -74,6 +75,7 @@ MemEncryptSevSetPageEncMask (
   IN UINTN             NumPages
   )
 {
+  DEBUG((DEBUG_INFO, "%a: addr=0x%lx pages=0x%lx\n", __func__, BaseAddress, NumPages));
   return InternalMemEncryptSevSetMemoryEncrypted (
            Cr3BaseAddress,
            BaseAddress,
@@ -136,6 +138,7 @@ MemEncryptSevClearMmioPageEncMask (
   IN UINTN             NumPages
   )
 {
+  DEBUG((DEBUG_INFO, "%a: addr=0x%lx pages=0x%lx\n", __func__, BaseAddress, NumPages));
   return InternalMemEncryptSevClearMmioPageEncMask (
            Cr3BaseAddress,
            BaseAddress,
