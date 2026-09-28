@@ -206,6 +206,11 @@ static const OSSL_ALGORITHM deflt_signature[] = {
 #ifndef OPENSSL_NO_SLH_DSA
     { PROV_NAMES_SLH_DSA_SHAKE_256S, "provider=default", ossl_slh_dsa_shake_256s_signature_functions },
 #endif
+#ifndef OPENSSL_NO_ML_DSA
+    { PROV_NAMES_ML_DSA_44, "provider=default", ossl_ml_dsa_44_signature_functions },
+    { PROV_NAMES_ML_DSA_65, "provider=default", ossl_ml_dsa_65_signature_functions },
+    { PROV_NAMES_ML_DSA_87, "provider=default", ossl_ml_dsa_87_signature_functions },
+#endif
 
     { NULL, NULL, NULL }
 };
