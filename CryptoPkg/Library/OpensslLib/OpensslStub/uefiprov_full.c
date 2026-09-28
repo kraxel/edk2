@@ -233,6 +233,8 @@ static const OSSL_ALGORITHM  deflt_signature[] = {
  #endif
   { PROV_NAMES_HMAC,               "provider=default", ossl_mac_legacy_hmac_signature_functions    },
  #ifndef OPENSSL_NO_ML_DSA
+  { PROV_NAMES_ML_DSA_44,          "provider=default", ossl_ml_dsa_44_signature_functions          },
+  { PROV_NAMES_ML_DSA_65,          "provider=default", ossl_ml_dsa_65_signature_functions          },
   { PROV_NAMES_ML_DSA_87,          "provider=default", ossl_ml_dsa_87_signature_functions          },
  #endif
  #ifndef OPENSSL_NO_SLH_DSA
@@ -275,6 +277,10 @@ static const OSSL_ALGORITHM  deflt_keymgmt[] = {
     PROV_DESCS_HMAC_SIGN },
 
  #ifndef OPENSSL_NO_ML_DSA
+  { PROV_NAMES_ML_DSA_44,          "provider=default", ossl_ml_dsa_44_keymgmt_functions,
+    PROV_DESCS_ML_DSA_44 },
+  { PROV_NAMES_ML_DSA_65,          "provider=default", ossl_ml_dsa_65_keymgmt_functions,
+    PROV_DESCS_ML_DSA_65 },
   { PROV_NAMES_ML_DSA_87,          "provider=default", ossl_ml_dsa_87_keymgmt_functions,
     PROV_DESCS_ML_DSA_87 },
  #endif
