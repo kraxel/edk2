@@ -28,7 +28,6 @@ def openssl_configure(openssldir, target, ec = True, lite = True):
         'no-cast',
         'no-chacha',
         'no-cmp',
-        'no-cms',
         'no-ct',
         'no-deprecated',
         'no-des',
