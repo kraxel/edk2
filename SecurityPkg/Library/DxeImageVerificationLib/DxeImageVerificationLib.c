@@ -1547,6 +1547,12 @@ IsAllowedByDb (
                          mImageDigest,
                          mImageDigestSize
                          );
+        DEBUG ((
+          DEBUG_INFO,
+          "%a: AuthenticodeVerify: VerifyStatus=%a\n",
+          __func__,
+          VerifyStatus ? "True" : "False"
+          ));
         if (VerifyStatus) {
           //
           // The image is signed and its signature is found in 'db'.
@@ -1973,6 +1979,8 @@ DxeImageVerificationHandler (
       continue;
     }
 
+    DEBUG ((DEBUG_INFO, "%a: HashPeImageByType ok\n", __func__));
+
     //
     // Check the digital signature against the revoked certificate in forbidden database (dbx).
     //
@@ -1987,7 +1995,10 @@ DxeImageVerificationHandler (
     //
     if (!IsVerified) {
       if (IsAllowedByDb (AuthData, AuthDataSize)) {
+        DEBUG ((DEBUG_INFO, "%a: IsAllowedByDb ok\n", __func__));
         IsVerified = TRUE;
+      } else {
+        DEBUG ((DEBUG_INFO, "%a: IsAllowedByDb failed\n", __func__));
       }
     }
 
