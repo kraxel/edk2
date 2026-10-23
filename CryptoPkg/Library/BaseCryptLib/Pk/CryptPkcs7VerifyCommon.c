@@ -847,6 +847,7 @@ Pkcs7Verify (
   Temp = TrustedCert;
   Cert = d2i_X509 (NULL, &Temp, (long)CertLength);
   if (Cert == NULL) {
+    DEBUG ((DEBUG_INFO, "%a/%d: d2i_X509 failed\n", __func__, __LINE__));
     goto _Exit;
   }
 
@@ -855,10 +856,12 @@ Pkcs7Verify (
   //
   CertStore = X509_STORE_new ();
   if (CertStore == NULL) {
+    DEBUG ((DEBUG_INFO, "%a/%d: X509_STORE_new failed\n", __func__, __LINE__));
     goto _Exit;
   }
 
   if (!(X509_STORE_add_cert (CertStore, Cert))) {
+    DEBUG ((DEBUG_INFO, "%a/%d: X509_STORE_add_cert failed\n", __func__, __LINE__));
     goto _Exit;
   }
 
@@ -885,6 +888,7 @@ Pkcs7Verify (
   Temp = SignedData;
   Cms  = d2i_CMS_ContentInfo (NULL, (const unsigned char **)&Temp, (long)SignedDataSize);
   if (Cms == NULL) {
+    DEBUG ((DEBUG_INFO, "%a/%d: get cms contentinfo failed\n", __func__, __LINE__));
     goto _Exit;
   }
 
@@ -896,6 +900,7 @@ Pkcs7Verify (
   // misclassified blob cannot reach the verification engine.
   //
   if (OBJ_obj2nid (CMS_get0_type (Cms)) != NID_pkcs7_signed) {
+    DEBUG ((DEBUG_INFO, "%a/%d: check cms type failed\n", __func__, __LINE__));
     goto _Exit;
   }
 
@@ -908,6 +913,7 @@ Pkcs7Verify (
   //
   DataBio = BIO_new_mem_buf (InData, (int)DataLength);
   if (DataBio == NULL) {
+    DEBUG ((DEBUG_INFO, "%a/%d: create bio failed\n", __func__, __LINE__));
     goto _Exit;
   }
 
