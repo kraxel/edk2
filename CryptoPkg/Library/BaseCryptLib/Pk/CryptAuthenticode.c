@@ -217,6 +217,7 @@ AuthenticodeVerify (
   Temp  = AuthData;
   Pkcs7 = d2i_PKCS7 (NULL, &Temp, (int)DataSize);
   if (Pkcs7 == NULL) {
+    DEBUG ((DEBUG_INFO, "%a/%d: d2i_PKCS7 failed\n", __func__, __LINE__));
     goto _Exit;
   }
 
@@ -224,6 +225,7 @@ AuthenticodeVerify (
   // Check if it's PKCS#7 Signed Data (for Authenticode Scenario)
   //
   if (!PKCS7_type_is_signed (Pkcs7) || PKCS7_get_detached (Pkcs7)) {
+    DEBUG ((DEBUG_INFO, "%a/%d: pkcs7 checks failed\n", __func__, __LINE__));
     goto _Exit;
   }
 
@@ -234,6 +236,7 @@ AuthenticodeVerify (
   //
   SpcIndirectDataOid = OBJ_get0_data (Pkcs7->d.sign->contents->type);
   if (SpcIndirectDataOid == NULL) {
+    DEBUG ((DEBUG_INFO, "%a/%d: get SpcIndirectDataOid failed\n", __func__, __LINE__));
     goto _Exit;
   }
 
@@ -247,6 +250,7 @@ AuthenticodeVerify (
     //
     // Un-matched SPC_INDIRECT_DATA_OBJID.
     //
+    DEBUG ((DEBUG_INFO, "%a/%d: SpcIndirectDataOid mismatch\n", __func__, __LINE__));
     goto _Exit;
   }
 
@@ -277,6 +281,7 @@ AuthenticodeVerify (
       (Asn1Tag != V_ASN1_SEQUENCE) ||
       (Asn1Class != V_ASN1_UNIVERSAL))
   {
+    DEBUG ((DEBUG_INFO, "%a/%d: SpcIndirectDataOid checks failed\n", __func__, __LINE__));
     goto _Exit;
   }
 
@@ -313,6 +318,7 @@ AuthenticodeVerify (
       (Asn1Tag != V_ASN1_SEQUENCE) ||
       (Asn1Class != V_ASN1_UNIVERSAL))
   {
+    DEBUG ((DEBUG_INFO, "%a/%d: get digest info failed\n", __func__, __LINE__));
     goto _Exit;
   }
 
@@ -327,6 +333,7 @@ AuthenticodeVerify (
                   (long)ContentSize - (long)(Asn1Cursor - SpcIndirectDataContent)
                   );
   if (DigestInfo == NULL) {
+    DEBUG ((DEBUG_INFO, "%a/%d: get digest info failed\n", __func__, __LINE__));
     goto _Exit;
   }
 
@@ -344,6 +351,7 @@ AuthenticodeVerify (
       (DigestOctet == NULL) ||
       (ExpectedDigestNid == NID_undef))
   {
+    DEBUG ((DEBUG_INFO, "%a/%d: check hash algo failed\n", __func__, __LINE__));
     goto _Exit;
   }
 
@@ -355,6 +363,7 @@ AuthenticodeVerify (
     // Declared digestAlgorithm does not match the expected algorithm for
     // HashSize.  Reject to prevent same-length cross-family substitution.
     //
+    DEBUG ((DEBUG_INFO, "%a/%d: check hash size failed\n", __func__, __LINE__));
     goto _Exit;
   }
 
@@ -364,6 +373,7 @@ AuthenticodeVerify (
     //
     // Un-matched PE/COFF Hash Value
     //
+    DEBUG ((DEBUG_INFO, "%a/%d: check hash value failed\n", __func__, __LINE__));
     goto _Exit;
   }
 
@@ -379,6 +389,7 @@ AuthenticodeVerify (
   //
   DetachedDerLen = SerializePkcs7AsDetached (Pkcs7, &DetachedDer);
   if ((DetachedDerLen <= 0) || (DetachedDer == NULL)) {
+    DEBUG ((DEBUG_INFO, "%a/%d: serialize as detached failed\n", __func__, __LINE__));
     goto _Exit;
   }
 
