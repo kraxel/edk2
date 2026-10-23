@@ -363,7 +363,15 @@ AuthenticodeVerify (
     // Declared digestAlgorithm does not match the expected algorithm for
     // HashSize.  Reject to prevent same-length cross-family substitution.
     //
-    DEBUG ((DEBUG_INFO, "%a/%d: check hash size failed\n", __func__, __LINE__));
+    DEBUG ((
+      DEBUG_INFO,
+      "%a/%d: check hash size failed [%d -> 0x%x, 0x%x]\n",
+      __func__,
+      __LINE__,
+      HashSize,
+      ExpectedDigestNid,
+      OBJ_obj2nid (DigestAlgoOid)
+      ));
     goto _Exit;
   }
 
