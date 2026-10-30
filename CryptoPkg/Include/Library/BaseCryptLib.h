@@ -33,6 +33,8 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
 #define CRYPTO_NID_ED448  0x0440
 
 // ML-DSA
+#define CRYPTO_NID_ML_DSA_44  0x05B1
+#define CRYPTO_NID_ML_DSA_65  0x05B2
 #define CRYPTO_NID_ML_DSA_87  0x05B3
 
 // SLH-DSA
