@@ -935,6 +935,15 @@ Pkcs7Verify (
     // left over from this failure.
     //
     DEBUG ((DEBUG_ERROR, "CMS_verify failed: 0x%lx\n", ERR_peek_last_error ()));
+    for (;;) {
+      unsigned long err;
+
+      err = ERR_get_error();
+      if (!err) {
+        break;
+      }
+      DEBUG ((DEBUG_ERROR, "  -> 0x%lx\n", err));
+    }
     ERR_clear_error ();
   }
 
