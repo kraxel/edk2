@@ -36,6 +36,12 @@ OpensslNidToPubKeySize (
   )
 {
   switch (Nid) {
+    case EVP_PKEY_ML_DSA_44:
+      *PubKeySize = 1312;
+      break;
+    case EVP_PKEY_ML_DSA_65:
+      *PubKeySize = 1952;
+      break;
     case EVP_PKEY_ML_DSA_87:
       *PubKeySize = 2592;
       break;
@@ -70,6 +76,12 @@ OpensslNidToPrivKeySize (
   )
 {
   switch (Nid) {
+    case EVP_PKEY_ML_DSA_44:
+      *PrivKeySize = 2560;
+      break;
+    case EVP_PKEY_ML_DSA_65:
+      *PrivKeySize = 4032;
+      break;
     case EVP_PKEY_ML_DSA_87:
       *PrivKeySize = 4896;
       break;
@@ -104,6 +116,12 @@ OpensslNidToSignatureSize (
   )
 {
   switch (Nid) {
+    case EVP_PKEY_ML_DSA_44:
+      *SignatureSize = 2420;
+      break;
+    case EVP_PKEY_ML_DSA_65:
+      *SignatureSize = 3309;
+      break;
     case EVP_PKEY_ML_DSA_87:
       *SignatureSize = 4627;
       break;
@@ -138,6 +156,12 @@ CryptoNidToOpensslNid (
   INT32  Nid;
 
   switch (CryptoNid) {
+    case CRYPTO_NID_ML_DSA_44:
+      Nid = EVP_PKEY_ML_DSA_44;
+      break;
+    case CRYPTO_NID_ML_DSA_65:
+      Nid = EVP_PKEY_ML_DSA_65;
+      break;
     case CRYPTO_NID_ML_DSA_87:
       Nid = EVP_PKEY_ML_DSA_87;
       break;
@@ -171,7 +195,11 @@ MlDsaTypeNameToNid (
 {
   INT32  Nid;
 
-  if (AsciiStrCmp (TypeName, "ML-DSA-87") == 0) {
+  if (AsciiStrCmp (TypeName, "ML-DSA-44") == 0) {
+    Nid = EVP_PKEY_ML_DSA_44;
+  } else if (AsciiStrCmp (TypeName, "ML-DSA-65") == 0) {
+    Nid = EVP_PKEY_ML_DSA_65;
+  } else if (AsciiStrCmp (TypeName, "ML-DSA-87") == 0) {
     Nid = EVP_PKEY_ML_DSA_87;
   } else {
     Nid = EVP_PKEY_NONE;
