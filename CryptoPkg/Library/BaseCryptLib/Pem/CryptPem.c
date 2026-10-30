@@ -153,7 +153,11 @@ MlDsaTypeNameToNid (
 {
   INT32  Nid;
 
-  if (AsciiStrCmp (TypeName, "ML-DSA-87") == 0) {
+  if (AsciiStrCmp (TypeName, "ML-DSA-44") == 0) {
+    Nid = EVP_PKEY_ML_DSA_44;
+  } else if (AsciiStrCmp (TypeName, "ML-DSA-65") == 0) {
+    Nid = EVP_PKEY_ML_DSA_65;
+  } else if (AsciiStrCmp (TypeName, "ML-DSA-87") == 0) {
     Nid = EVP_PKEY_ML_DSA_87;
   } else {
     Nid = EVP_PKEY_NONE;
@@ -181,6 +185,8 @@ IsMlDsaNidSupported (
   )
 {
   switch (Nid) {
+    case EVP_PKEY_ML_DSA_44:
+    case EVP_PKEY_ML_DSA_65:
     case EVP_PKEY_ML_DSA_87:
       return TRUE;
     default:
