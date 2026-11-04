@@ -1012,6 +1012,16 @@ DetectAndPreparePlatformPciDevicePath (
   IN PCI_TYPE00           *Pci
   )
 {
+  EFI_STATUS  Status;
+
+  Status = PciIo->Attributes (
+                    PciIo,
+                    EfiPciIoAttributeOperationEnable,
+                    EFI_PCI_DEVICE_ENABLE,
+                    NULL
+                    );
+  ASSERT_EFI_ERROR (Status);
+
   //
   // Here we decide whether it is LPC Bridge
   //
@@ -1069,7 +1079,7 @@ DetectAndPreparePlatformPciDevicePath (
     return EFI_SUCCESS;
   }
 
-  return EFI_SUCCESS;
+  return Status;
 }
 
 EFI_STATUS
