@@ -1,0 +1,19 @@
+## @file
+#  This is core module in DXE phase.
+#
+#  It provides an implementation of DXE Core that is compliant with DXE CIS.
+#
+#  Copyright (c) 2006 - 2019, Intel Corporation. All rights reserved.<BR>
+#  SPDX-License-Identifier: Apache-2.0
+#
+##
+
+[Defines]
+  INF_VERSION                    = 0x00010005
+  BASE_NAME                      = PatinaDxeCore
+  FILE_GUID                      = 23C9322F-2AF2-476A-BC4C-26BC88266C71
+  MODULE_TYPE                    = DXE_CORE
+  VERSION_STRING                 = 1.0
+
+[Binaries.X64]
+  PE32|target/x86_64-unknown-uefi/debug/ovmf.efi
