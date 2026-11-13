@@ -186,7 +186,7 @@ APRIORI DXE {
 #
 # DXE Phase modules
 #
-INF  MdeModulePkg/Core/Dxe/DxeMain.inf
+!include OvmfPkg/Include/Fdf/DxeCore.fdf.inc
 
 INF  MdeModulePkg/Universal/ReportStatusCodeRouter/RuntimeDxe/ReportStatusCodeRouterRuntimeDxe.inf
 INF  MdeModulePkg/Universal/StatusCodeHandler/RuntimeDxe/StatusCodeHandlerRuntimeDxe.inf
@@ -196,9 +196,6 @@ INF  MdeModulePkg/Core/RuntimeDxe/RuntimeDxe.inf
 INF  MdeModulePkg/Universal/SecurityStubDxe/SecurityStubDxe.inf
 INF  MdeModulePkg/Universal/EbcDxe/EbcDxe.inf
 INF  UefiCpuPkg/CpuIo2Dxe/CpuIo2Dxe.inf
-
-INF  UefiCpuPkg/CpuDxe/CpuDxe.inf
-INF  FILE_GUID = $(UP_CPU_DXE_GUID) UefiCpuPkg/CpuDxe/CpuDxe.inf
 
 INF  OvmfPkg/LocalApicTimerDxe/LocalApicTimerDxe.inf
 INF  OvmfPkg/IncompatiblePciDeviceSupportDxe/IncompatiblePciDeviceSupport.inf
