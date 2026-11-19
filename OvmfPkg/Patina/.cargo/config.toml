@@ -1,0 +1,18 @@
+[env]
+PATINA_CONFIG_VERSION = "1"
+RUSTC_BOOTSTRAP = "1"
+
+[profile.dev]
+opt-level = "s"
+lto = true
+incremental = true
+
+[target.x86_64-unknown-uefi]
+rustflags = [
+    # The Patina binary is a boot service driver
+    "-C", "link-arg=/subsystem:efi_boot_service_driver",
+    # Forcing frame pointers allows for better stack walking
+    "-C", "force-frame-pointers",
+    # Preserve stack unwind info
+    "-C", "force-unwind-tables",
+]

@@ -1,0 +1,20 @@
+[package]
+name = "edk2_ovmf_dxe_core"
+version = "0.0.1"
+edition = "2024"
+
+[dependencies]
+# Patina dependencies
+patina = { version = "24" }
+patina_dxe_core = { version = "24" }
+patina_ffs_extractors = { version = "24" }
+patina_stacktrace = { version = "24" }
+
+# Other dependencies
+log = { version = "^0.4", default-features = false, features = [ "release_max_level_info" ] }
+zerocopy = { version = "0.8", features = ["derive"] }
+
+[features]
+default = [ "compatibility_mode_allowed", "v1_resource_descriptor_support" ]
+compatibility_mode_allowed = [ "patina_dxe_core/compatibility_mode_allowed" ]
+v1_resource_descriptor_support = [ "patina_dxe_core/v1_resource_descriptor_support" ]
