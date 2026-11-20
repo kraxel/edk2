@@ -18,3 +18,21 @@ zerocopy = { version = "0.8", features = ["derive"] }
 default = [ "compatibility_mode_allowed", "v1_resource_descriptor_support" ]
 compatibility_mode_allowed = [ "patina_dxe_core/compatibility_mode_allowed" ]
 v1_resource_descriptor_support = [ "patina_dxe_core/v1_resource_descriptor_support" ]
+
+[patch.crates-io]
+patina={path="/home/kraxel/projects/patina/sdk/patina"}
+patina_acpi={path="/home/kraxel/projects/patina/components/patina_acpi"}
+patina_macro={path="/home/kraxel/projects/patina/sdk/patina_macro"}
+patina_test={path="/home/kraxel/projects/patina/components/patina_test"}
+patina_adv_logger={path="/home/kraxel/projects/patina/components/patina_adv_logger"}
+patina_dxe_core={path="/home/kraxel/projects/patina/patina_dxe_core"}
+patina_debugger={path="/home/kraxel/projects/patina/core/patina_debugger"}
+patina_internal_cpu={path="/home/kraxel/projects/patina/core/patina_internal_cpu"}
+patina_stacktrace={path="/home/kraxel/projects/patina/core/patina_stacktrace"}
+patina_ffs={path="/home/kraxel/projects/patina/sdk/patina_ffs"}
+patina_internal_core={path="/home/kraxel/projects/patina/core/patina_internal_core"}
+patina_ffs_extractors={path="/home/kraxel/projects/patina/sdk/patina_ffs_extractors"}
+patina_samples={path="/home/kraxel/projects/patina/components/patina_samples"}
+patina_smbios={path="/home/kraxel/projects/patina/components/patina_smbios"}
+patina_mm={path="/home/kraxel/projects/patina/components/patina_mm"}
+patina_performance={path="/home/kraxel/projects/patina/components/patina_performance"}
