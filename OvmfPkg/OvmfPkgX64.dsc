@@ -36,6 +36,7 @@
   DEFINE SOURCE_DEBUG_ENABLE     = FALSE
   DEFINE CC_MEASUREMENT_ENABLE   = TRUE
   DEFINE DEBUG_TO_MEM            = FALSE
+  DEFINE PATINA_DXE_CORE         = TRUE
 
 !include OvmfPkg/Include/Dsc/OvmfTpmDefines.dsc.inc
 
@@ -88,6 +89,10 @@
   DEFINE UP_CPU_DXE_GUID  = 6490f1c5-ebcc-4665-8892-0075b9bb49b7
 
 !include OvmfPkg/Include/Dsc/OvmfPkg.dsc.inc
+
+!if $(PATINA_DXE_CORE) == TRUE
+  PREBUILD                       = sh OvmfPkg/Patina/prebuild.sh
+!endif
 
 [BuildOptions]
   GCC:RELEASE_*_*_CC_FLAGS             = -DMDEPKG_NDEBUG
