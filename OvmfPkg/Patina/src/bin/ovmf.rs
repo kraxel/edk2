@@ -14,7 +14,7 @@ use core::arch::asm;
 use core::ffi::c_void;
 use core::panic::PanicInfo;
 use patina::debug::log::{Format, SerialLogger};
-use patina::peripheral::serial::uart::Uart16550;
+use patina::peripheral::serial::uart::UartQemuDebug;
 use patina_dxe_core::*;
 use patina_ffs_extractors::CompositeSectionExtractor;
 use patina_stacktrace::StackTrace;
@@ -44,7 +44,7 @@ fn panic(info: &PanicInfo) -> ! {
     loop {}
 }
 
-static LOGGER: SerialLogger<Uart16550> = SerialLogger::new(
+static LOGGER: SerialLogger<UartQemuDebug> = SerialLogger::new(
     Format::Standard,
     &[
         ("allocations", log::LevelFilter::Off),
@@ -53,8 +53,7 @@ static LOGGER: SerialLogger<Uart16550> = SerialLogger::new(
         ("goblin", log::LevelFilter::Off),
     ],
     log::LevelFilter::Info,
-    // SAFETY:  From the dirty hacks department.  This isn't an actual 16550.
-    unsafe { Uart16550::new_io(QEMU_DEBUGCON) },
+    UartQemuDebug::new(QEMU_DEBUGCON),
 );
 
 struct Ovmf;
@@ -76,6 +75,7 @@ static CORE: Core<Ovmf> = Core::new(CompositeSectionExtractor::new());
 #[cfg_attr(target_os = "uefi", unsafe(export_name = "efi_main"))]
 /// SAFETY: We must take on faith that the physical_hob_list pointer is valid.
 pub unsafe extern "efiapi" fn _start(physical_hob_list: *const c_void) -> ! {
+    LOGGER.init();
     log::set_logger(&LOGGER)
         .map(|()| log::set_max_level(log::LevelFilter::Trace))
         .unwrap();
