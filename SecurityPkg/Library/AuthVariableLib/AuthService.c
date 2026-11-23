@@ -601,6 +601,10 @@ CheckSignatureListFormat (
       return EFI_INVALID_PARAMETER;
     }
 
+    if ((SigList->SignatureListSize - sizeof (EFI_SIGNATURE_LIST) - SigList->SignatureHeaderSize) % SigList->SignatureSize != 0) {
+      return EFI_INVALID_PARAMETER;
+    }
+
     for (Index = 0; Index < (sizeof (mSupportSigItem) / sizeof (EFI_SIGNATURE_ITEM)); Index++ ) {
       if (CompareGuid (&SigList->SignatureType, &mSupportSigItem[Index].SigType)) {
         //
@@ -641,10 +645,6 @@ CheckSignatureListFormat (
       if (Status != EFI_SUCCESS) {
         return Status;
       }
-    }
-
-    if ((SigList->SignatureListSize - sizeof (EFI_SIGNATURE_LIST) - SigList->SignatureHeaderSize) % SigList->SignatureSize != 0) {
-      return EFI_INVALID_PARAMETER;
     }
 
     SigCount += (SigList->SignatureListSize - sizeof (EFI_SIGNATURE_LIST) - SigList->SignatureHeaderSize) / SigList->SignatureSize;
